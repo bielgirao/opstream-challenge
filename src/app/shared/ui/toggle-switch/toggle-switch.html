@@ -1,0 +1,22 @@
+<label
+  class="ui-toggle"
+  [class.ui-toggle--16]="size() === 16"
+  [class.is-checked]="checked()"
+  [class.is-disabled]="disabled()"
+>
+  <input
+    class="ui-toggle__native"
+    type="checkbox"
+    role="switch"
+    [attr.id]="inputId()"
+    [attr.aria-describedby]="describedBy()"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="toggle($event)"
+    (blur)="onTouched()"
+  />
+  <span class="ui-toggle__track" aria-hidden="true">
+    <span class="ui-toggle__knob"></span>
+  </span>
+  <span class="ui-toggle__label"><ng-content /></span>
+</label>

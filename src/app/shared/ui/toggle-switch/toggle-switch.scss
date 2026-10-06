@@ -1,0 +1,76 @@
+.ui-toggle {
+  --toggle-width: var(--toggle-24-width);
+  --toggle-height: var(--toggle-24-height);
+  --toggle-padding: 2px;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--text-body1);
+  color: var(--color-text-primary);
+  cursor: pointer;
+
+  &.ui-toggle--16 {
+    --toggle-width: var(--toggle-16-width);
+    --toggle-height: var(--toggle-16-height);
+    --toggle-padding: 1.33px;
+
+    font: var(--text-body2);
+  }
+
+  &.is-disabled {
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.ui-toggle__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+
+.ui-toggle__track {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  padding: var(--toggle-padding);
+  border-radius: var(--radius-pill);
+  background: var(--mono-gray2);
+  transition: background-color var(--duration-base) var(--easing-standard);
+
+  .is-checked & {
+    background: var(--color-brand-track);
+  }
+
+  .is-disabled & {
+    opacity: 0.5;
+  }
+
+  .ui-toggle__native:focus-visible + & {
+    box-shadow: var(--shadow-focus);
+  }
+}
+
+.ui-toggle__knob {
+  width: calc(var(--toggle-height) - 2 * var(--toggle-padding));
+  height: calc(var(--toggle-height) - 2 * var(--toggle-padding));
+  border-radius: 50%;
+  background: var(--mono-white);
+  transition:
+    transform var(--duration-base) var(--easing-standard),
+    background-color var(--duration-base) var(--easing-standard);
+
+  .is-checked & {
+    background: var(--color-brand);
+    transform: translateX(calc(var(--toggle-width) - var(--toggle-height)));
+  }
+}
+
+.ui-toggle__label:empty {
+  display: none;
+}

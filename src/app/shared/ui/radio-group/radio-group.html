@@ -1,0 +1,29 @@
+<div
+  class="ui-radio-group"
+  role="radiogroup"
+  [attr.aria-labelledby]="labelledBy()"
+  [attr.aria-describedby]="describedBy()"
+  [attr.aria-invalid]="invalid() || null"
+>
+  @for (option of options(); track option) {
+    <label
+      class="ui-radio"
+      [class.is-checked]="value() === option"
+      [class.is-disabled]="disabled()"
+      [class.is-invalid]="invalid()"
+    >
+      <input
+        class="ui-radio__native"
+        type="radio"
+        [name]="name()"
+        [value]="option"
+        [checked]="value() === option"
+        [disabled]="disabled()"
+        (change)="select(option)"
+        (blur)="onTouched()"
+      />
+      <span class="ui-radio__indicator" aria-hidden="true"></span>
+      <span class="ui-radio__label">{{ option }}</span>
+    </label>
+  }
+</div>
