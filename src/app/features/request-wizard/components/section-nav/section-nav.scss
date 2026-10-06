@@ -15,5 +15,15 @@
     li {
       flex-shrink: 0;
     }
+
+    // Horizontal tabs: the active marker moves from the right edge to the bottom edge.
+    a {
+      border-right-width: 0;
+      border-bottom: 2px solid transparent;
+    }
+
+    a.is-active {
+      border-bottom-color: var(--color-brand);
+    }
   }
 }
