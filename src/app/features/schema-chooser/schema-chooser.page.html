@@ -1,0 +1,48 @@
+<main class="chooser">
+  <ui-card class="chooser__card">
+    <h1 class="chooser__title" id="chooser-title">What do you need to purchase?</h1>
+
+    @switch (state().status) {
+      @case ('loading') {
+        <div class="chooser__options" aria-hidden="true">
+          <ui-skeleton width="104px" height="32px" radius="pill" />
+          <ui-skeleton width="104px" height="32px" radius="pill" />
+        </div>
+        <span class="visually-hidden" role="status">Loading request types…</span>
+        <button uiButton type="button" disabled>Start</button>
+      }
+
+      @case ('error') {
+        <ui-notification class="chooser__message" type="error" title="We couldn't load the request types">
+          Check your connection and try again.
+          <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="retry()">
+            Try again
+          </button>
+        </ui-notification>
+      }
+
+      @case ('ready') {
+        @if (schemas().length === 0) {
+          <ui-notification class="chooser__message" type="info" title="No request types available">
+            There is nothing to request right now. Please check back later.
+          </ui-notification>
+        } @else {
+          <div class="chooser__options" role="group" aria-labelledby="chooser-title">
+            @for (schema of schemas(); track schema.id) {
+              <button
+                uiChip
+                type="button"
+                [selected]="selectedId() === schema.id"
+                (click)="selectedId.set(schema.id)"
+              >
+                <ui-icon [name]="iconFor(schema.id)" />
+                {{ schema.title }}
+              </button>
+            }
+          </div>
+          <button uiButton type="button" (click)="start()">Start</button>
+        }
+      }
+    }
+  </ui-card>
+</main>
