@@ -1,0 +1,49 @@
+@let id = inputId();
+@let f = field();
+
+@switch (f.type) {
+  @case ('text') {
+    <ui-field-card [fieldId]="id" [label]="f.label" [optional]="showOptional()" [error]="error()">
+      <input
+        uiInput
+        [id]="id"
+        [formControl]="control()"
+        [invalid]="!!error()"
+        [attr.aria-describedby]="describedBy()"
+        [attr.aria-required]="f.required || null"
+        autocomplete="off"
+      />
+    </ui-field-card>
+  }
+  @case ('number') {
+    <ui-field-card [fieldId]="id" [label]="f.label" [optional]="showOptional()" [error]="error()">
+      <input
+        uiInput
+        uiNumberInput
+        [id]="id"
+        [decimalPlaces]="f.decimalPlaces"
+        [formControl]="control()"
+        [invalid]="!!error()"
+        [attr.aria-describedby]="describedBy()"
+        [attr.aria-required]="f.required || null"
+      />
+    </ui-field-card>
+  }
+  @case ('radio') {
+    <ui-field-card [fieldId]="id" [label]="f.label" group [optional]="showOptional()" [error]="error()">
+      <ui-radio-group
+        [name]="id"
+        [options]="f.options"
+        [formControl]="control()"
+        [invalid]="!!error()"
+        [labelledBy]="labelId()"
+        [describedBy]="describedBy()"
+      />
+    </ui-field-card>
+  }
+  @case ('toggle') {
+    <ui-field-card [fieldId]="id" [label]="f.label" [error]="error()">
+      <ui-toggle-switch [inputId]="id" [formControl]="control()" [describedBy]="describedBy()" />
+    </ui-field-card>
+  }
+}

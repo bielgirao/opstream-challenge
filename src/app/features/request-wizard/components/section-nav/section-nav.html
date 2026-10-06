@@ -1,0 +1,17 @@
+<nav class="section-nav" aria-label="Request sections">
+  <ol class="section-nav__list">
+    @for (item of items(); track item.id) {
+      <li>
+        <a
+          uiNavItem
+          [routerLink]="['/requests', requestId(), 'sections', item.id]"
+          [active]="item.active"
+          [disabled]="item.disabled"
+          [status]="item.status"
+        >
+          {{ item.title }}
+        </a>
+      </li>
+    }
+  </ol>
+</nav>

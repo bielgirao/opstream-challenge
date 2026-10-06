@@ -1,0 +1,79 @@
+@switch (openState().status) {
+  @case ('loading') {
+    <div class="wizard" aria-busy="true">
+      <div class="wizard__nav">
+        <ui-skeleton height="40px" />
+        <ui-skeleton height="40px" />
+      </div>
+      <div class="wizard__main">
+        <ui-skeleton width="40%" height="28px" />
+        <ui-skeleton height="104px" radius="md" />
+        <ui-skeleton height="104px" radius="md" />
+      </div>
+      <span class="visually-hidden" role="status">Loading your request…</span>
+    </div>
+  }
+
+  @case ('error') {
+    <div class="wizard wizard--message">
+      <ui-notification type="error" title="We couldn't load this request">
+        Your answers are safe. Check your connection and try again.
+        <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="reload()">
+          Try again
+        </button>
+      </ui-notification>
+    </div>
+  }
+
+  @case ('ready') {
+    @let current = request();
+    @let currentSection = section();
+
+    @if (!current) {
+      <div class="wizard wizard--message">
+        <ui-notification type="info" title="We couldn't find this request">
+          It may have been started in another browser or removed.
+          <a uiNotificationActions class="wizard__link" routerLink="/requests/new">Start a new request</a>
+        </ui-notification>
+      </div>
+    } @else if (currentSection) {
+      @let group = current.form.controls[currentSection.id];
+
+      <div class="wizard">
+        <app-section-nav class="wizard__nav" [requestId]="current.id" [items]="navItems()" />
+
+        <main class="wizard__main">
+          <header class="wizard__header">
+            <div>
+              <p class="wizard__eyebrow">{{ current.schema.title }}</p>
+              <h1 class="wizard__title" tabindex="-1">{{ currentSection.title }}</h1>
+            </div>
+            <ui-save-indicator [status]="session.saveStatus()" (retry)="retrySaves()" />
+          </header>
+
+          @if (showSaveFailure()) {
+            <ui-notification type="error" title="Some answers weren't saved">
+              Your request can't be submitted until every answer is saved.
+              <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="retrySaves()">
+                Retry saving
+              </button>
+            </ui-notification>
+          }
+
+          <form class="wizard__form" [formGroup]="group" (ngSubmit)="next()" novalidate>
+            @for (field of currentSection.fields; track field.id) {
+              <app-dynamic-field [field]="field" [control]="group.controls[field.id]" />
+            }
+            <app-wizard-actions
+              class="wizard__actions"
+              [isFirst]="isFirst()"
+              [isLast]="isLast()"
+              [submitting]="submitting()"
+              (previous)="previous()"
+            />
+          </form>
+        </main>
+      </div>
+    }
+  }
+}
