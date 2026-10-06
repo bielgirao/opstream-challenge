@@ -7,27 +7,14 @@ import { MOCK_SCHEMAS } from '../mock-backend/schemas.data';
 import { normalizeSchemas } from '../models';
 import { controlsById } from './request-form';
 import { REQUEST_REGISTRY_STORAGE } from './request-registry';
+import { MemoryStorage } from '../../../testing/memory-storage';
 import { AUTOSAVE_OPTIONS, RequestSession } from './request-session.service';
 
 const [software] = normalizeSchemas(MOCK_SCHEMAS);
 const ITEM = '1758177604';
 const QTY = '75484637462';
 
-function memoryStorage(): Storage {
-  const data = new Map<string, string>();
-  return {
-    get length() {
-      return data.size;
-    },
-    clear: () => data.clear(),
-    getItem: (k) => data.get(k) ?? null,
-    key: (i) => [...data.keys()][i] ?? null,
-    removeItem: (k) => void data.delete(k),
-    setItem: (k, v) => void data.set(k, v),
-  };
-}
-
-function setup(storage = memoryStorage()) {
+function setup(storage = new MemoryStorage()) {
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(),
@@ -91,7 +78,7 @@ describe('RequestSession', () => {
   });
 
   it('reopens a request started in this tab even before anything was saved', async () => {
-    const storage = memoryStorage();
+    const storage = new MemoryStorage();
     const first = setup(storage);
     const { id } = first.session.start(software);
     TestBed.resetTestingModule();
