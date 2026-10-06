@@ -1,18 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { parseNumericText, sanitizeNumericText, UiNumberInput } from './number-input';
+import {
+  numericTextPattern,
+  parseNumericText,
+  sanitizeNumericText,
+  UiNumberInput,
+} from './number-input';
 
 @Component({
   imports: [ReactiveFormsModule, UiNumberInput],
-  template: `<input uiNumberInput [formControl]="control" />`,
+  template: `<input uiNumberInput [decimalPlaces]="decimalPlaces()" [formControl]="control" />`,
 })
 class Host {
+  decimalPlaces = signal(0);
   control = new FormControl<number | null>(null);
 }
 
-function setup() {
+function setup(decimalPlaces = 0) {
   const fixture = TestBed.createComponent(Host);
+  fixture.componentInstance.decimalPlaces.set(decimalPlaces);
   fixture.detectChanges();
   const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
   const host = fixture.componentInstance;
@@ -33,69 +40,96 @@ function setup() {
 }
 
 describe('UiNumberInput', () => {
-  it('is a text field with a numeric keyboard', () => {
-    const { input } = setup();
-    expect(input.type).toBe('text');
-    expect(input.getAttribute('inputmode')).toBe('decimal');
+  describe('whole numbers (default)', () => {
+    it('is a text field with the numeric keyboard', () => {
+      const { input } = setup();
+      expect(input.type).toBe('text');
+      expect(input.getAttribute('inputmode')).toBe('numeric');
+    });
+
+    it('accepts digits, emitting a number', () => {
+      const { input, host, type } = setup();
+      type('120');
+      expect(input.value).toBe('120');
+      expect(host.control.value).toBe(120);
+    });
+
+    it.each(['a', 'e', 'E', '+', '-', ' ', '%', '.', ','])('blocks typing %j', (char) => {
+      const { input, host, insert } = setup();
+      insert('4');
+      expect(insert(char)).toBe(false);
+      expect(input.value).toBe('4');
+      expect(host.control.value).toBe(4);
+    });
+
+    it('blocks numbers beyond the safe integer range', () => {
+      const { input, insert } = setup();
+      insert(String(Number.MAX_SAFE_INTEGER), 'insertFromPaste');
+      expect(insert('1')).toBe(false);
+      expect(input.value).toBe(String(Number.MAX_SAFE_INTEGER));
+    });
+
+    it('rejects pasted text that is not a whole number', () => {
+      const { input, insert } = setup();
+      expect(insert('12abc', 'insertFromPaste')).toBe(false);
+      expect(insert('1.5', 'insertFromPaste')).toBe(false);
+      expect(input.value).toBe('');
+    });
+
+    it('accepts a pasted number surrounded by spaces', () => {
+      const { input, host, insert } = setup();
+      insert(' 42 ', 'insertFromPaste');
+      expect(input.value).toBe('42');
+      expect(host.control.value).toBe(42);
+    });
   });
 
-  it('accepts digits and one decimal point, emitting a number', () => {
-    const { input, host, type } = setup();
-    type('12.5');
-    expect(input.value).toBe('12.5');
-    expect(host.control.value).toBe(12.5);
-  });
+  describe('with decimal places', () => {
+    it('uses the decimal keyboard and accepts up to the allowed decimals', () => {
+      const { input, host, type, insert } = setup(2);
+      expect(input.getAttribute('inputmode')).toBe('decimal');
+      type('12.5');
+      expect(insert('0')).toBe(true);
+      expect(insert('1')).toBe(false); // third decimal
+      expect(host.control.value).toBe(12.5);
+      expect(input.value).toBe('12.50');
+    });
 
-  it.each(['a', 'e', 'E', '+', '-', ' ', '%'])('blocks typing %j', (char) => {
-    const { input, host, insert } = setup();
-    insert('4');
-    expect(insert(char)).toBe(false);
-    expect(input.value).toBe('4');
-    expect(host.control.value).toBe(4);
-  });
+    it('blocks a second decimal point', () => {
+      const { input, type, insert } = setup(2);
+      type('1.5');
+      expect(insert('.')).toBe(false);
+      expect(input.value).toBe('1.5');
+    });
 
-  it('blocks a second decimal point', () => {
-    const { input, type, insert } = setup();
-    type('1.5');
-    expect(insert('.')).toBe(false);
-    expect(input.value).toBe('1.5');
-  });
+    it('turns a comma into a decimal point', () => {
+      const { input, host, type } = setup(2);
+      type('3,25');
+      expect(input.value).toBe('3.25');
+      expect(host.control.value).toBe(3.25);
+    });
 
-  it('turns a comma into a decimal point', () => {
-    const { input, host, type } = setup();
-    type('3,25');
-    expect(input.value).toBe('3.25');
-    expect(host.control.value).toBe(3.25);
-  });
-
-  it('rejects pasted text containing anything but a number', () => {
-    const { input, insert } = setup();
-    expect(insert('12abc', 'insertFromPaste')).toBe(false);
-    expect(input.value).toBe('');
-  });
-
-  it('accepts a pasted number surrounded by spaces', () => {
-    const { input, host, insert } = setup();
-    insert(' 42 ', 'insertFromPaste');
-    expect(input.value).toBe('42');
-    expect(host.control.value).toBe(42);
-  });
-
-  it('emits null when the field is emptied or holds only "."', () => {
-    const { input, host, type } = setup();
-    type('.');
-    expect(host.control.value).toBeNull();
-    input.value = '';
-    input.dispatchEvent(new Event('input'));
-    expect(host.control.value).toBeNull();
+    it('emits null while only "." is typed', () => {
+      const { host, type } = setup(2);
+      type('.');
+      expect(host.control.value).toBeNull();
+    });
   });
 
   it('sanitises text that bypassed beforeinput (e.g. IME composition)', () => {
     const { input, host } = setup();
-    input.value = '1a2.3.4';
+    input.value = '1a2.3';
     input.dispatchEvent(new Event('input'));
-    expect(input.value).toBe('12.34');
-    expect(host.control.value).toBe(12.34);
+    expect(input.value).toBe('12');
+    expect(host.control.value).toBe(12);
+  });
+
+  it('emits null when the field is emptied', () => {
+    const { input, host, type } = setup();
+    type('5');
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    expect(host.control.value).toBeNull();
   });
 
   it('shows the form value, and nothing for non-numbers', () => {
@@ -115,7 +149,18 @@ describe('UiNumberInput', () => {
   });
 });
 
-describe('parseNumericText / sanitizeNumericText', () => {
+describe('numeric text helpers', () => {
+  it.each([
+    [0, '123', true],
+    [0, '1.', false],
+    [2, '1.', true],
+    [2, '.5', true],
+    [2, '1.234', false],
+    [2, '1.2.3', false],
+  ])('pattern(%i) %s %j', (places, text, expected) => {
+    expect(numericTextPattern(places).test(text)).toBe(expected);
+  });
+
   it.each([
     ['', null],
     ['.', null],
@@ -128,12 +173,14 @@ describe('parseNumericText / sanitizeNumericText', () => {
   });
 
   it.each([
-    ['abc', ''],
-    ['-12', '12'],
-    ['1e5', '15'],
-    ['1,5', '1.5'],
-    ['1.2.3', '1.23'],
-  ])('sanitises %j to %j', (text, expected) => {
-    expect(sanitizeNumericText(text)).toBe(expected);
+    ['abc', 0, ''],
+    ['-12', 0, '12'],
+    ['1e5', 0, '15'],
+    ['1.5', 0, '1'],
+    ['1,5', 2, '1.5'],
+    ['1.2.3', 2, '1.23'],
+    ['1.23456', 2, '1.23'],
+  ])('sanitises %j (%i places) to %j', (text, places, expected) => {
+    expect(sanitizeNumericText(text, places)).toBe(expected);
   });
 });
