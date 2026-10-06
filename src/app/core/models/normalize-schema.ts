@@ -13,6 +13,9 @@ type Warn = (message: string) => void;
 const isFieldType = (type: unknown): type is FieldType =>
   FIELD_TYPES.includes(type as FieldType);
 
+/** Upper bound for `decimalPlaces`; beyond this, floating point makes the rule meaningless. */
+export const MAX_DECIMAL_PLACES = 6;
+
 /**
  * Turns an API schema into the shape the app relies on, dropping what cannot be rendered
  * instead of failing: unsupported field types, radios without options, duplicate field ids,
@@ -87,5 +90,16 @@ function normalizeField(raw: RawSchemaField, schemaId: string, warn: Warn): Sche
     required: raw.type !== 'toggle' && raw.required === true,
     options,
     defaultValue: raw.default ?? null,
+    decimalPlaces: raw.type === 'number' ? normalizeDecimalPlaces(raw, schemaId, warn) : 0,
   };
+}
+
+function normalizeDecimalPlaces(raw: RawSchemaField, schemaId: string, warn: Warn): number {
+  const { decimalPlaces } = raw;
+  if (decimalPlaces === undefined) return 0;
+  if (Number.isInteger(decimalPlaces) && decimalPlaces >= 0 && decimalPlaces <= MAX_DECIMAL_PLACES) {
+    return decimalPlaces;
+  }
+  warn(`[${schemaId}] Field ${raw.id}: invalid decimalPlaces ${JSON.stringify(decimalPlaces)}, using 0`);
+  return 0;
 }

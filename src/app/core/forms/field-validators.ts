@@ -1,6 +1,6 @@
 import { ValidatorFn, Validators } from '@angular/forms';
 import { SchemaField } from '../models';
-import { finiteNumber, oneOf, requiredTrimmed } from './validators';
+import { finiteNumber, numberPrecision, oneOf, requiredTrimmed } from './validators';
 
 /**
  * The single place where validation rules are decided (ADR-0013).
@@ -15,7 +15,7 @@ export function validatorsFor(field: SchemaField): ValidatorFn[] {
 
   switch (field.type) {
     case 'number':
-      validators.push(finiteNumber, Validators.min(0));
+      validators.push(finiteNumber, Validators.min(0), numberPrecision(field.decimalPlaces));
       break;
     case 'radio':
       validators.push(oneOf(field.options));

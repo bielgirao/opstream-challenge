@@ -9,6 +9,7 @@ const field = (overrides: Partial<SchemaField>): SchemaField => ({
   required: false,
   options: [],
   defaultValue: null,
+  decimalPlaces: 0,
   ...overrides,
 });
 
@@ -32,7 +33,12 @@ describe('validatorsFor', () => {
     expect(errorsFor(f, -5)).toEqual({ min: { min: 0, actual: -5 } });
     expect(errorsFor(f, NaN)).toEqual({ notANumber: true });
     expect(errorsFor(f, 0)).toBeNull();
-    expect(errorsFor(f, 2.5)).toBeNull();
+    expect(errorsFor(f, 12)).toBeNull();
+  });
+
+  it('number: whole by default, decimals only when the schema allows them', () => {
+    expect(errorsFor(field({ type: 'number' }), 2.5)).toEqual({ integer: true });
+    expect(errorsFor(field({ type: 'number', decimalPlaces: 2 }), 2.5)).toBeNull();
   });
 
   it('number: optional accepts empty', () => {

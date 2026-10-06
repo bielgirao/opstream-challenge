@@ -16,6 +16,11 @@ export interface RawSchemaField {
   required?: boolean;
   options?: string[];
   default?: AnswerValue;
+  /**
+   * Extension to the brief's schema (ADR-0013): decimal places allowed in a `number` field.
+   * Absent means 0 — numbers are whole by default (both brief schemas only have quantities).
+   */
+  decimalPlaces?: number;
 }
 
 export interface RawSchemaSection {
@@ -45,6 +50,8 @@ export interface SchemaField {
   options: readonly string[];
   /** Schema default, or null when the schema has none. */
   defaultValue: AnswerValue;
+  /** Decimal places allowed for `number` fields (0 = whole numbers); 0 for other types. */
+  decimalPlaces: number;
 }
 
 export interface SchemaSection {

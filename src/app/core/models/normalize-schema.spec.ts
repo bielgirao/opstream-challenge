@@ -27,8 +27,8 @@ describe('normalizeSchema', () => {
     );
 
     expect(result?.sections[0].fields).toEqual([
-      { id: '1758177604', label: 'Item Name', type: 'text', required: true, options: [], defaultValue: null },
-      { id: '2389182391823812', label: 'Shipping', type: 'toggle', required: false, options: [], defaultValue: false },
+      { id: '1758177604', label: 'Item Name', type: 'text', required: true, options: [], defaultValue: null, decimalPlaces: 0 },
+      { id: '2389182391823812', label: 'Shipping', type: 'toggle', required: false, options: [], defaultValue: false, decimalPlaces: 0 },
     ]);
     expect(warn).not.toHaveBeenCalled();
   });
@@ -48,6 +48,26 @@ describe('normalizeSchema', () => {
       warn,
     );
     expect(result?.sections[0].fields.map((f) => f.required)).toEqual([false, false]);
+  });
+
+  it('makes numbers whole unless the schema allows decimal places', () => {
+    const result = normalizeSchema(
+      schema([
+        {
+          id: 's1',
+          title: 'S',
+          fields: [
+            { id: 1, label: 'Quantity', type: 'number' },
+            { id: 2, label: 'Unit price', type: 'number', decimalPlaces: 2 },
+            { id: 3, label: 'Broken', type: 'number', decimalPlaces: -1 },
+            { id: 4, label: 'Name', type: 'text', decimalPlaces: 2 },
+          ],
+        },
+      ]),
+      warn,
+    );
+    expect(result?.sections[0].fields.map((f) => f.decimalPlaces)).toEqual([0, 2, 0, 0]);
+    expect(warn).toHaveBeenCalledTimes(1);
   });
 
   it('skips unsupported types, radios without options and duplicate ids, with a warning', () => {

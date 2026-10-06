@@ -23,6 +23,23 @@ export const finiteNumber: ValidatorFn = (control: AbstractControl): ValidationE
   return typeof value === 'number' && Number.isFinite(value) ? null : { notANumber: true };
 };
 
+/**
+ * Numbers must fit the field's precision: whole when `places` is 0, otherwise at most
+ * `places` decimals. Also rejects magnitudes beyond Number.MAX_SAFE_INTEGER, where
+ * JavaScript numbers stop being exact. Non-numbers and empty values pass (other validators' job).
+ */
+export const numberPrecision =
+  (places: number): ValidatorFn =>
+  (control: AbstractControl): ValidationErrors | null => {
+    const { value } = control;
+    if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+    if (Math.abs(value) > Number.MAX_SAFE_INTEGER) return { tooLarge: true };
+    if (places === 0) return Number.isInteger(value) ? null : { integer: true };
+
+    const scaled = value * 10 ** places;
+    return Math.abs(scaled - Math.round(scaled)) < 1e-6 ? null : { decimalPlaces: { max: places } };
+  };
+
 /** The value must be one of `options`. Empty values pass. */
 export const oneOf =
   (options: readonly string[]): ValidatorFn =>

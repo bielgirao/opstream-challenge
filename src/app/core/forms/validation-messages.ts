@@ -8,6 +8,9 @@ export const VALIDATION_MESSAGES: Readonly<Record<string, MessageFn>> = {
   notANumber: () => 'Enter a valid number',
   min: (error) => `Must be ${(error as { min: number }).min} or more`,
   invalidOption: () => 'Choose one of the options',
+  integer: () => 'Enter a whole number',
+  decimalPlaces: (error) => `Use at most ${(error as { max: number }).max} decimal places`,
+  tooLarge: () => 'This number is too large',
 };
 
 const FALLBACK_MESSAGE = 'Invalid value';
