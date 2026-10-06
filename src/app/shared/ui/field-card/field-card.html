@@ -1,0 +1,29 @@
+<!-- A single <ng-content> rendered from either branch (multiple ng-content slots cannot share content). -->
+<ng-template #control><ng-content /></ng-template>
+
+<ng-template #labelText>
+  {{ label() }}
+  @if (optional()) {
+    <span class="ui-field-card__optional">(optional)</span>
+  }
+</ng-template>
+
+@if (group()) {
+  <fieldset class="ui-field-card__body">
+    <legend class="ui-field-card__label" [id]="labelId()">
+      <ng-container [ngTemplateOutlet]="labelText" />
+    </legend>
+    <ng-container [ngTemplateOutlet]="control" />
+  </fieldset>
+} @else {
+  <div class="ui-field-card__body">
+    <label class="ui-field-card__label" [id]="labelId()" [for]="fieldId()">
+      <ng-container [ngTemplateOutlet]="labelText" />
+    </label>
+    <ng-container [ngTemplateOutlet]="control" />
+  </div>
+}
+
+@if (error()) {
+  <p class="ui-field-card__error" [id]="errorId()">{{ error() }}</p>
+}
