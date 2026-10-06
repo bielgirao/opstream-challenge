@@ -1,0 +1,179 @@
+<main class="playground">
+  <h1>UI components</h1>
+  <p class="playground__intro">Shared design-system components and their states.</p>
+
+  <section>
+    <h2>Button</h2>
+    <div class="row">
+      <button uiButton type="button">Start</button>
+      <button uiButton type="button" variant="secondary">Cancel</button>
+      <button uiButton type="button" disabled>Disabled</button>
+      <button uiButton type="button" loading>Loading</button>
+      <button uiButton type="button"><ui-icon name="plus" /> With icon</button>
+    </div>
+    <div class="row">
+      <button uiButton type="button" size="32" caps variant="secondary">Previous</button>
+      <button uiButton type="button" size="32" caps>Next</button>
+      <button uiButton type="button" size="32" caps loading>Submit</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Chip</h2>
+    <div class="row">
+      <button
+        uiChip
+        type="button"
+        [selected]="selectedSchema() === 'software'"
+        (click)="selectedSchema.set('software')"
+      >
+        <ui-icon name="apps" /> Software
+      </button>
+      <button
+        uiChip
+        type="button"
+        [selected]="selectedSchema() === 'hardware'"
+        (click)="selectedSchema.set('hardware')"
+      >
+        <ui-icon name="desktop" /> Hardware
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Form fields (Reactive Forms)</h2>
+    <form class="stack" [formGroup]="form" (ngSubmit)="validate()">
+      <ui-field-card fieldId="pg-item-name" label="Item Name" [error]="errorFor('itemName')">
+        <input
+          uiInput
+          id="pg-item-name"
+          formControlName="itemName"
+          [invalid]="!!errorFor('itemName')"
+          [attr.aria-describedby]="errorFor('itemName') ? fieldErrorId('pg-item-name') : null"
+        />
+      </ui-field-card>
+
+      <ui-field-card fieldId="pg-quantity" label="Quantity" [error]="errorFor('quantity')">
+        <input
+          uiInput
+          type="number"
+          id="pg-quantity"
+          formControlName="quantity"
+          [invalid]="!!errorFor('quantity')"
+          [attr.aria-describedby]="errorFor('quantity') ? fieldErrorId('pg-quantity') : null"
+        />
+      </ui-field-card>
+
+      <ui-field-card fieldId="pg-location" label="Vendor Location" group [error]="errorFor('location')">
+        <ui-radio-group
+          name="pg-location"
+          formControlName="location"
+          [options]="['USA', 'UK', 'Other']"
+          [invalid]="!!errorFor('location')"
+          [labelledBy]="fieldLabelId('pg-location')"
+          [describedBy]="errorFor('location') ? fieldErrorId('pg-location') : null"
+        />
+      </ui-field-card>
+
+      <ui-field-card fieldId="pg-shipping" label="Requires shipping" optional>
+        <ui-toggle-switch inputId="pg-shipping" formControlName="shipping" />
+      </ui-field-card>
+
+      <div class="row">
+        <button uiButton type="submit" size="32" caps>Validate</button>
+      </div>
+      <pre class="playground__value">{{ form.getRawValue() | json }}</pre>
+    </form>
+  </section>
+
+  <section>
+    <h2>Field error states</h2>
+    <div class="stack">
+      <ui-field-card fieldId="pg-err-text" label="Item Name" error="This field is required">
+        <input uiInput id="pg-err-text" invalid [attr.aria-describedby]="fieldErrorId('pg-err-text')" />
+      </ui-field-card>
+      <ui-field-card fieldId="pg-err-radio" label="Vendor Location" group error="Choose an option">
+        <ui-radio-group
+          name="pg-err-radio"
+          [options]="['USA', 'UK', 'Other']"
+          invalid
+          [labelledBy]="fieldLabelId('pg-err-radio')"
+          [describedBy]="fieldErrorId('pg-err-radio')"
+        />
+      </ui-field-card>
+      <ui-field-card fieldId="pg-disabled" label="Disabled">
+        <input uiInput id="pg-disabled" value="Read only value" disabled />
+      </ui-field-card>
+    </div>
+  </section>
+
+  <section>
+    <h2>Toggle switch</h2>
+    <div class="row">
+      <ui-toggle-switch size="24">Large</ui-toggle-switch>
+      <ui-toggle-switch size="16">Small</ui-toggle-switch>
+    </div>
+  </section>
+
+  <section>
+    <h2>Navigation item</h2>
+    <nav class="nav" aria-label="Sections (example)">
+      <button uiNavItem type="button" status="done">Requested Item</button>
+      <button uiNavItem type="button" active status="saving">Vendor Information</button>
+      <button uiNavItem type="button" status="error">Shipping</button>
+      <button uiNavItem type="button" disabled>Approval</button>
+    </nav>
+  </section>
+
+  <section>
+    <h2>Save indicator</h2>
+    <div class="stack stack--tight">
+      @for (status of saveStatuses; track status) {
+        <ui-save-indicator [status]="status" />
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2>Notification</h2>
+    <div class="stack">
+      <ui-notification type="error" title="Couldn't load request types">
+        Check your connection and try again.
+        <button uiButton uiNotificationActions type="button" size="32" variant="secondary">
+          Try again
+        </button>
+      </ui-notification>
+      <ui-notification type="warning" appearance="outlined" title="Some answers weren't saved">
+        Retry before submitting.
+      </ui-notification>
+      <ui-notification type="success" title="Good news!">
+        Finance automatically approves purchases included in the budget.
+      </ui-notification>
+      <ui-notification type="info" appearance="outlined">Draft restored from your last session.</ui-notification>
+    </div>
+  </section>
+
+  <section>
+    <h2>Loading</h2>
+    <div class="row row--center">
+      <ui-loader size="sm" />
+      <ui-loader />
+      <ui-loader size="lg" label="Loading…" />
+    </div>
+    <div class="stack stack--tight skeletons">
+      <ui-skeleton width="40%" height="20px" />
+      <ui-skeleton height="80px" radius="md" />
+      <div class="row">
+        <ui-skeleton width="96px" height="32px" radius="pill" />
+        <ui-skeleton width="96px" height="32px" radius="pill" />
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Card</h2>
+    <ui-card>
+      <h3>What do you need to purchase?</h3>
+    </ui-card>
+  </section>
+</main>
