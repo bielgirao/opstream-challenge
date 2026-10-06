@@ -16,6 +16,7 @@ Rules come from two sources only: **schema properties** and the **field type**.
 | `required: true` on `number` / `radio` | Has a value | `required` |
 | `type: number` | Finite number (rejects `NaN`, `Infinity`) | `notANumber` |
 | `type: number` | ≥ 0 | `min` |
+| `type: number` | Whole number, unless the schema sets `decimalPlaces` (then at most that many decimals); never beyond `Number.MAX_SAFE_INTEGER` | `integer` / `decimalPlaces` / `tooLarge` |
 | `type: radio` | Value is one of `options` (guards stale drafts after a schema change) | `invalidOption` |
 | `type: toggle` | Never required; defaults to `default ?? false` | — |
 
@@ -28,14 +29,24 @@ core/forms/
 └── field-error.pipe.ts      control errors → first message, for templates
 ```
 
+### Numbers are whole unless the schema says otherwise
+The schema only says `"type": "number"`, and both number fields in the brief are quantities, which are whole.
+Inferring "integer" from the label "Quantity" would break the schema-driven premise, so:
+- `number` means **whole number ≥ 0 by default**;
+- a schema may opt into decimals with an optional `decimalPlaces` property (0–6), e.g. a unit price with `2`.
+
+The brief's schemas stay untouched (no `decimalPlaces` → whole numbers). This is a small, documented
+extension of the schema, and the first step of letting the schema drive rules (`min`, `max`, `pattern` later).
+
 ### Number fields only accept numbers
 Validation alone is not enough for numbers: `<input type="number">` lets "e", "+", "-" (and, in Firefox,
 any letter) through, then reports unparsable text to JavaScript as an empty value. An optional number
 field would accept "1e" on screen and silently save `null`.
 
-So number fields use a text input with `inputmode="decimal"` plus the `uiNumberInput` directive, which
-blocks any insertion (typing, paste, drop) that would leave anything but digits and one decimal point,
-turns "," into "." (mobile pt-BR keyboards), and gives the form `number | null`. Negative signs are
+So number fields use a text input with `inputmode` (numeric / decimal) plus the `uiNumberInput` directive, which
+blocks any insertion (typing, paste, drop) that the field cannot hold — anything but digits, plus one decimal
+point with up to `decimalPlaces` digits when allowed — turns "," into "." (mobile pt-BR keyboards), and gives
+the form `number | null`. Negative signs are
 blocked at input time because every number must be >= 0. `finiteNumber` stays as a guard for values
 that arrive by other routes (e.g. a restored draft).
 
