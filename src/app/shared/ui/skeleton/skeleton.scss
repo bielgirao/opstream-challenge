@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--mono-gray3) 0%,
+    var(--mono-gray4) 50%,
+    var(--mono-gray3) 100%
+  );
+  background-size: 200% 100%;
+  animation: ui-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes ui-skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}
