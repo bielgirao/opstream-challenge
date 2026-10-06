@@ -138,6 +138,35 @@ focus moved to the first invalid field on Next and to the section heading after 
 and a native checkbox with `role="switch"`, the save status in a polite live region, `aria-current="step"` in the sidebar,
 visible focus rings and reduced motion support.
 
+## How I used AI
+
+The brief allows AI, so here is exactly how it was used. I worked with Claude Code as a pair: it drafted,
+I decided and reviewed. Nothing went into a commit that I could not explain line by line.
+
+**Where it helped most**
+
+- **Getting oriented fast:** summarising the brief and researching Opstream's product before writing code.
+- **Turning screenshots into specs:** the Figma files were view-only, so the mockups were rebuilt in a working Figma
+  file from screenshots, and the design-system tokens were transcribed from screenshots into `_tokens.scss`.
+- **Design before code:** decisions were discussed one at a time (validation strategy, saving invalid values,
+  where the autosave lives) and recorded as ADRs before implementation.
+- **Tests:** drafting marble tests for the autosave pipeline and specs for every component; running the full flow,
+  including the failure paths, in Chrome to check what unit tests cannot.
+
+**Where I had to push back**
+
+- **Number input.** The first version used `<input type="number">` and documented that "1e" is reported as empty
+  as a known limitation. That is not acceptable for a quantity: I required that number fields never accept text,
+  which led to the `uiNumberInput` directive.
+- **Whole numbers.** The first version also allowed decimals. Quantities are whole, but inferring that from the
+  label would break the schema-driven design, so numbers became whole by default with an optional
+  `decimalPlaces` in the schema ([ADR-0013](docs/adr/0013-validation-rules-by-field-type.md)).
+- **Verification over trust.** Generated code was not taken as correct until tests and a real browser agreed:
+  that caught a miscounted marble diagram in a test, disabled buttons that were invisible on the page background,
+  and the wrong active-tab marker on mobile.
+
+**What I kept for myself:** the scope, every trade-off in the ADRs, and the final review of each commit.
+
 ## Known limitations
 
 - Answers saved for a request are never deleted from the mock database (it lives in `localStorage`).
