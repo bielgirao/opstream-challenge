@@ -7,6 +7,7 @@ export * from './input/input';
 export * from './loader/loader';
 export * from './nav-item/nav-item';
 export * from './notification/notification';
+export * from './number-input/number-input';
 export * from './radio-group/radio-group';
 export * from './save-indicator/save-indicator';
 export * from './skeleton/skeleton';

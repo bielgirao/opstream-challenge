@@ -11,10 +11,11 @@ export const requiredTrimmed: ValidatorFn = (control: AbstractControl): Validati
   isEmpty(control.value) ? { required: true } : null;
 
 /**
- * Rejects NaN and ±Infinity. Empty values pass: emptiness is `required`'s job.
+ * Rejects anything that is not a finite number (NaN, ±Infinity, numeric strings).
+ * Empty values pass: emptiness is `required`'s job.
  *
- * Note: <input type="number"> reports unparsable text (e.g. "1e") as an empty value,
- * so that case reaches this validator as null.
+ * The UI already blocks non-numeric input (UiNumberInput); this guards values that
+ * arrive by other routes, such as a draft restored from the server.
  */
 export const finiteNumber: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const { value } = control;

@@ -1,10 +1,10 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
- * Design system styling for a native <input>. Native value accessors keep working,
- * so `formControlName` binds directly (text → DefaultValueAccessor, number → NumberValueAccessor).
+ * Design system styling for a native <input>. Angular's DefaultValueAccessor keeps working,
+ * so `formControlName` binds directly. For numbers, add the `uiNumberInput` directive.
  *
- * Usage: <input uiInput type="number" id="qty" formControlName="qty" [invalid]="isInvalid" />
+ * Usage: <input uiInput id="name" formControlName="name" [invalid]="isInvalid" />
  */
 @Component({
   selector: 'input[uiInput]',
