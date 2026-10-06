@@ -28,6 +28,17 @@ core/forms/
 └── field-error.pipe.ts      control errors → first message, for templates
 ```
 
+### Number fields only accept numbers
+Validation alone is not enough for numbers: `<input type="number">` lets "e", "+", "-" (and, in Firefox,
+any letter) through, then reports unparsable text to JavaScript as an empty value. An optional number
+field would accept "1e" on screen and silently save `null`.
+
+So number fields use a text input with `inputmode="decimal"` plus the `uiNumberInput` directive, which
+blocks any insertion (typing, paste, drop) that would leave anything but digits and one decimal point,
+turns "," into "." (mobile pt-BR keyboards), and gives the form `number | null`. Negative signs are
+blocked at input time because every number must be >= 0. `finiteNumber` stays as a guard for values
+that arrive by other routes (e.g. a restored draft).
+
 ## Options considered
 - **Injectable service:** nothing to inject and no state; a service would only add `TestBed` to the tests.
 - **Rules inside the form factory:** works, but mixes "how the form is built" with "what is valid".
