@@ -24,20 +24,30 @@ export const DEFAULT_MOCK_BACKEND_CONFIG: MockBackendConfig = {
 };
 
 /**
- * Lets anyone trying the app force the error paths from the URL:
- * `?mockFailureRate=1` makes every call fail, `?mockFailureRate=0` disables failures.
+ * Lets anyone trying the app force the error paths from the URL (read once, on page load):
+ * - `?mockFailureRate=0..1` sets the failure rate of every call (`0` disables failures);
+ * - `?mockSaveFailureRate=0..1` only affects saving answers, to watch autosave retry and give up.
  */
 export function withUrlOverrides(config: MockBackendConfig, search: string): MockBackendConfig {
-  const raw = new URLSearchParams(search).get('mockFailureRate');
-  const rate = raw === null || raw.trim() === '' ? NaN : Number(raw);
-  if (!Number.isFinite(rate) || rate < 0 || rate > 1) return config;
+  const params = new URLSearchParams(search);
+  const all = parseRate(params.get('mockFailureRate'));
+  const save = parseRate(params.get('mockSaveFailureRate'));
+  if (all === null && save === null) return config;
+
+  const withRate = (profile: EndpointProfile, rate: number | null): EndpointProfile =>
+    rate === null ? profile : { ...profile, failureRate: rate };
 
   return {
     ...config,
-    getSchemas: { ...config.getSchemas, failureRate: rate },
-    getDraft: { ...config.getDraft, failureRate: rate },
-    saveAnswer: { ...config.saveAnswer, failureRate: rate },
+    getSchemas: withRate(config.getSchemas, all),
+    getDraft: withRate(config.getDraft, all),
+    saveAnswer: withRate(config.saveAnswer, save ?? all),
   };
+}
+
+function parseRate(raw: string | null): number | null {
+  const rate = raw === null || raw.trim() === '' ? NaN : Number(raw);
+  return Number.isFinite(rate) && rate >= 0 && rate <= 1 ? rate : null;
 }
 
 export const MOCK_BACKEND_CONFIG = new InjectionToken<MockBackendConfig>('MOCK_BACKEND_CONFIG', {
