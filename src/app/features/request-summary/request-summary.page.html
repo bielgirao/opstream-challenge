@@ -1,0 +1,55 @@
+<main class="summary">
+  @switch (openState().status) {
+    @case ('loading') {
+      <ui-card class="summary__card" aria-busy="true">
+        <ui-skeleton width="48px" height="48px" radius="pill" />
+        <ui-skeleton width="50%" height="24px" />
+        <ui-skeleton height="160px" radius="md" />
+        <span class="visually-hidden" role="status">Loading your request…</span>
+      </ui-card>
+    }
+
+    @case ('error') {
+      <ui-notification class="summary__message" type="error" title="We couldn't load this request">
+        Check your connection and try again.
+        <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="reload()">
+          Try again
+        </button>
+      </ui-notification>
+    }
+
+    @case ('ready') {
+      @if (request(); as current) {
+        <ui-card class="summary__card">
+          <ui-icon class="summary__icon" name="check-circle" [size]="48" />
+          <h1 class="summary__title">Request submitted</h1>
+          <p class="summary__subtitle">{{ current.schema.title }} · all answers saved</p>
+
+          <div class="summary__answers">
+            <h2 class="summary__heading">Summary</h2>
+            @for (section of sections(); track section.id) {
+              <section class="summary__section" [attr.aria-labelledby]="'summary-' + section.id">
+                <h3 class="summary__section-title" [id]="'summary-' + section.id">{{ section.title }}</h3>
+                <dl class="summary__list">
+                  @for (row of section.rows; track row.id) {
+                    <div class="summary__row">
+                      <dt>{{ row.label }}</dt>
+                      <dd [class.is-empty]="!row.answer">{{ row.answer ?? 'not answered' }}</dd>
+                    </div>
+                  }
+                </dl>
+              </section>
+            }
+          </div>
+
+          <button uiButton type="button" (click)="createNewRequest()">Create New Request</button>
+        </ui-card>
+      } @else {
+        <ui-notification class="summary__message" type="info" title="We couldn't find this request">
+          It may have been started in another browser or removed.
+          <a uiNotificationActions class="summary__link" routerLink="/requests/new">Start a new request</a>
+        </ui-notification>
+      }
+    }
+  }
+</main>
