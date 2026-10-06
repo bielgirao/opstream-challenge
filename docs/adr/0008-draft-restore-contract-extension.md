@@ -16,6 +16,9 @@ Without it, a refresh loses everything, which defeats the purpose of autosave.
 - **Restore from the client's own `localStorage`:** works, but bypasses the API and hides what the backend should own.
 - **Extend the contract — chosen**, and say so clearly in the README.
 
+A per-tab registry in `sessionStorage` also remembers each request's schema and submitted flag: without a
+"create" or "submit" endpoint, a refresh right after Start, or on the summary, would otherwise lose them.
+
 ## Consequences
 - One endpoint beyond the brief, flagged as a deliberate extension.
 - "Create New Request" clears the current request id; old drafts remain in the mock DB.

@@ -13,6 +13,8 @@ src/app/
 ├── shared/ui/   presentational components that mirror the design system (no domain knowledge)
 └── features/    schema-chooser, request-wizard, request-summary
 ```
+The request being filled in (form, autosave, submission) lives in `core/request`, not in a feature:
+the chooser starts it, the wizard edits it and the summary reads it, and features must not import each other.
 Logic that matters lives in testable functions and services (`request-form.factory`, `autosave.service`),
 not inside components.
 

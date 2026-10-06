@@ -26,7 +26,7 @@ each FormControl.valueChanges → { questionId, value }
 | Invalid values | **Saved anyway** | A draft is incomplete by nature. Validation gates Next/Submit, not saving. Losing typed input is worse. |
 | Submit | `flush()` fires pending debounces, waits for all `saved`; any `error` blocks submit | Prevents submitting with the last field unsaved. |
 | Draft restore | `patchValue(…, { emitEvent: false })` | Restoring must not trigger PUTs. |
-| Lifecycle | Service provided by the wizard page; torn down with `takeUntilDestroyed` | One pipeline per request. |
+| Lifecycle | Owned by the root `RequestSession`, one pipeline per active request; stopped on submit and on "Create New Request" | A save in flight finishes even if the user leaves the wizard. |
 | Closing the tab | `beforeunload` warning while saves are pending | Cheap protection against data loss. |
 
 Aggregate status priority: `error` → "Couldn't save · Retry" › `retrying` → "Error – retrying…" › `pending`/`saving` → "Saving…" › all `saved` → "Saved" › nothing yet → hidden.
