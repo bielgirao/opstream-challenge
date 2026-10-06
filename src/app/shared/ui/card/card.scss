@@ -1,0 +1,7 @@
+:host {
+  display: block;
+  padding: var(--card-padding, var(--space-10));
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-card);
+}
