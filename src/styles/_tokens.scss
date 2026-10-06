@@ -1,0 +1,193 @@
+// Design tokens as CSS custom properties.
+//
+// Two layers:
+//   1. Primitives — named exactly as in Opstream's design system (Brand/Main, Mono/Dark1…).
+//   2. Semantic   — what components consume (--color-text-primary, --color-border-focus…).
+// Components must only use the semantic layer, so a rebrand touches primitives only.
+//
+// Values marked "assumed" were not confirmed from the design system (view-only file).
+// See ADR-0010.
+
+:root {
+  // ---------------------------------------------------------------------------
+  // 1. Primitives
+  // ---------------------------------------------------------------------------
+
+  // Brand
+  --brand-green37: #1aa287;
+  --brand-main: #1db496;
+  --brand-on-hover: #21caa8;
+  --brand-green91: #dbf6f0;
+  --brand-light: #f2fdfb;
+
+  // Mono
+  --mono-dark1: #26292d;
+  --mono-dark2: #42454c;
+  --mono-dark3: #5a606d;
+  --mono-gray1: #8b92a0;
+  --mono-gray2: #cccccc;
+  --mono-gray3: #e5e5e5;
+  --mono-gray4: #f8f8f8;
+  --mono-white: #ffffff;
+
+  // States
+  --states-red: #ed4c5c;
+  --states-orange: #db9f1f;
+  --states-highlighter: #fffce5;
+  --states-link-blue: #2f5bea;
+
+  // ---------------------------------------------------------------------------
+  // 2. Semantic — color
+  // ---------------------------------------------------------------------------
+
+  // Surfaces
+  --color-bg-page: var(--mono-gray4);
+  --color-bg-surface: var(--mono-white);
+  --color-bg-disabled: var(--mono-gray4); // disabled inputs (on white cards)
+  --color-bg-disabled-strong: var(--mono-gray3); // disabled buttons (must stand out on the page background)
+
+  // Text
+  --color-text-primary: var(--mono-dark1);
+  --color-text-secondary: var(--mono-dark3);
+  --color-text-muted: var(--mono-gray1);
+  --color-text-disabled: var(--mono-gray2);
+  --color-text-on-brand: var(--mono-white);
+  --color-text-link: var(--states-link-blue);
+
+  // Borders
+  --color-border: var(--mono-gray3);
+  --color-border-strong: var(--mono-gray2);
+  --color-border-focus: var(--brand-main);
+
+  // Brand (actions, selection, active states)
+  --color-brand: var(--brand-main);
+  --color-brand-hover: var(--brand-on-hover);
+  --color-brand-pressed: var(--brand-green37);
+  --color-brand-subtle: var(--brand-green91);
+  --color-brand-surface: var(--brand-light);
+  --color-brand-track: rgb(29 180 150 / 20%); // toggle "on" track: Brand/Main at 20%
+
+  // Feedback
+  --color-danger: var(--states-red);
+  --color-danger-subtle: color-mix(in srgb, var(--states-red) 8%, white); // assumed (red97 not confirmed)
+  --color-warning: var(--states-orange);
+  --color-warning-subtle: var(--states-highlighter);
+  --color-info: var(--states-link-blue);
+  --color-info-subtle: color-mix(in srgb, var(--states-link-blue) 8%, white); // assumed
+  --color-success: var(--brand-main);
+  --color-success-subtle: var(--brand-green91);
+
+  // ---------------------------------------------------------------------------
+  // Typography — Gilroy with Figtree fallback (ADR-0011)
+  // ---------------------------------------------------------------------------
+
+  --font-family-base: 'Gilroy', 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-10: 10px;
+  --font-size-12: 12px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-20: 20px;
+  --font-size-24: 24px;
+
+  --line-height-base: 1.5; // design system default: 150%
+  --line-height-tight: 1.15; // error message (14px / 16px)
+
+  --letter-spacing-caps: 0.04em; // Button2: 4%
+  --letter-spacing-overline: 0.5px;
+
+  // Text styles as `font` shorthands, named after the design system.
+  // Usage: `font: var(--text-body1);`
+  --text-h1: var(--font-weight-bold) var(--font-size-24) / var(--line-height-base) var(--font-family-base);
+  --text-h2: var(--font-weight-bold) var(--font-size-20) / var(--line-height-base) var(--font-family-base);
+  --text-h3: var(--font-weight-semibold) var(--font-size-18) / var(--line-height-base) var(--font-family-base);
+  --text-h4: var(--font-weight-semibold) var(--font-size-16) / var(--line-height-base) var(--font-family-base);
+  --text-sub-h1: var(--font-weight-semibold) var(--font-size-14) / var(--line-height-base) var(--font-family-base);
+  --text-sub-h2: var(--font-weight-semibold) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
+  --text-body1: var(--font-weight-medium) var(--font-size-14) / var(--line-height-base) var(--font-family-base);
+  --text-body2: var(--font-weight-medium) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
+  --text-caption: var(--font-weight-medium) var(--font-size-10) / var(--line-height-base) var(--font-family-base);
+  --text-button: var(--font-weight-bold) var(--font-size-14) / var(--line-height-base) var(--font-family-base);
+  --text-button2: var(--font-weight-bold) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
+  --text-overline: var(--font-weight-bold) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
+
+  // ---------------------------------------------------------------------------
+  // Spacing — 8px grid
+  // ---------------------------------------------------------------------------
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  // Named aliases used by the design system
+  --space-tiny: var(--space-2); // assumed: 8px
+  --space-small: var(--space-4); // assumed: 16px
+
+  // ---------------------------------------------------------------------------
+  // Radius
+  // ---------------------------------------------------------------------------
+
+  --radius-micro: 4px; // assumed; matches the 4px radius documented for 32px selectors
+  --radius-md: 8px; // field cards
+  --radius-lg: 16px; // chooser card
+  --radius-pill: 999px; // chips, pill radios, toggle
+
+  // ---------------------------------------------------------------------------
+  // Elevation
+  // ---------------------------------------------------------------------------
+
+  --shadow-button: 0 0 12px rgb(0 0 0 / 8%);
+  --shadow-card: 0 1px 4px rgb(0 0 0 / 6%); // assumed (Card-Shadow not confirmed)
+  --shadow-focus: 0 0 0 3px rgb(29 180 150 / 25%); // focus ring, not in the design system
+
+  // ---------------------------------------------------------------------------
+  // Component sizes
+  // ---------------------------------------------------------------------------
+
+  --control-height-sm: 32px; // button size 32
+  --control-height-md: 40px; // button size 40
+  --control-height-lg: 48px; // input field
+
+  --toggle-16-width: 28.67px;
+  --toggle-16-height: 16px;
+  --toggle-24-width: 43px;
+  --toggle-24-height: 24px;
+
+  --radio-size: 16px;
+  --icon-size-sm: 16px;
+  --icon-size-md: 20px;
+
+  // ---------------------------------------------------------------------------
+  // Layout
+  // ---------------------------------------------------------------------------
+
+  --layout-sidebar-width: 200px;
+  --layout-content-max-width: 640px;
+  --layout-chooser-max-width: 720px;
+
+  // ---------------------------------------------------------------------------
+  // Motion
+  // ---------------------------------------------------------------------------
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}
