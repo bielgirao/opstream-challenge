@@ -1,0 +1,5 @@
+@if (title()) {
+  <p class="ui-notification__title">{{ title() }}</p>
+}
+<div class="ui-notification__body"><ng-content /></div>
+<div class="ui-notification__actions"><ng-content select="[uiNotificationActions]" /></div>

@@ -1,0 +1,35 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 20px;
+  font: var(--text-body2);
+  color: var(--color-text-muted);
+}
+
+:host([data-status='saving']) ui-loader {
+  color: var(--color-text-muted);
+}
+
+:host([data-status='retrying']) {
+  color: var(--color-warning);
+}
+
+:host([data-status='saved']) {
+  color: var(--color-success);
+}
+
+:host([data-status='error']) {
+  color: var(--color-danger);
+}
+
+.ui-save-indicator__retry {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-link);
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -1,0 +1,19 @@
+@switch (status()) {
+  @case ('saving') {
+    <ui-loader size="sm" />
+    <span>Saving…</span>
+  }
+  @case ('retrying') {
+    <ui-loader size="sm" />
+    <span>Error – retrying…</span>
+  }
+  @case ('saved') {
+    <ui-icon name="check-circle" />
+    <span>Saved</span>
+  }
+  @case ('error') {
+    <ui-icon name="alert-circle" />
+    <span>Couldn't save.</span>
+    <button class="ui-save-indicator__retry" type="button" (click)="retry.emit()">Retry</button>
+  }
+}

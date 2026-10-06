@@ -1,0 +1,15 @@
+<span class="ui-nav-item__label"><ng-content /></span>
+@switch (status()) {
+  @case ('saving') {
+    <ui-loader size="sm" />
+    <span class="visually-hidden">(saving)</span>
+  }
+  @case ('done') {
+    <ui-icon class="ui-nav-item__status is-done" name="check-circle" />
+    <span class="visually-hidden">(complete)</span>
+  }
+  @case ('error') {
+    <ui-icon class="ui-nav-item__status is-error" name="alert-circle" />
+    <span class="visually-hidden">(not saved)</span>
+  }
+}
