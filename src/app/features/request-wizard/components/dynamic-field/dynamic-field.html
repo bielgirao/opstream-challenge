@@ -6,6 +6,7 @@
     <ui-field-card [fieldId]="id" [label]="f.label" [optional]="showOptional()" [error]="error()">
       <input
         uiInput
+        uiTrimOnBlur
         [id]="id"
         [formControl]="control()"
         [invalid]="!!error()"

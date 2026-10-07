@@ -50,6 +50,8 @@ export function sanitizeNumericText(text: string, decimalPlaces: number): string
  * position needed to filter keystrokes. A text input with `inputmode` keeps the numeric
  * keyboard on mobile and gives full control.
  *
+ * On blur the text is normalised to the number it represents ("007" → "7").
+ *
  * Negative numbers are rejected at input time because every number field must be >= 0, and
  * so are values beyond Number.MAX_SAFE_INTEGER (ADR-0013). The form receives `number | null`.
  */
@@ -64,7 +66,7 @@ export function sanitizeNumericText(text: string, decimalPlaces: number): string
     '[attr.inputmode]': "decimalPlaces() > 0 ? 'decimal' : 'numeric'",
     '(beforeinput)': 'onBeforeInput($event)',
     '(input)': 'onInput()',
-    '(blur)': 'onTouched()',
+    '(blur)': 'onBlur()',
   },
 })
 export class UiNumberInput implements ControlValueAccessor {
@@ -91,6 +93,13 @@ export class UiNumberInput implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.input.disabled = isDisabled;
+  }
+
+  /** Shows the canonical form of the number ("007" → "7", "1." → "1", "." → ""), then marks touched. */
+  protected onBlur(): void {
+    const value = parseNumericText(this.input.value);
+    this.input.value = value === null ? '' : String(value);
+    this.onTouched();
   }
 
   /** Blocks any insertion (typing, paste, drop) that would leave text the field cannot hold. */

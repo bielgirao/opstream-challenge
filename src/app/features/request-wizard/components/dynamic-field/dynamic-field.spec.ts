@@ -41,6 +41,15 @@ describe('DynamicField', () => {
     expect(el.querySelector('input#field-42')?.getAttribute('type')).toBeNull();
   });
 
+  it('trims text answers when the field loses focus', () => {
+    const { control, el } = render(field({ type: 'text' }), '');
+    const input = el.querySelector('input')!;
+    input.value = '  Figma  ';
+    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new Event('blur'));
+    expect(control.value).toBe('Figma');
+  });
+
   it('renders numbers with the numeric-only input', () => {
     const { el } = render(field({ type: 'number' }));
     expect(el.querySelector('input#field-42')?.getAttribute('inputmode')).toBe('numeric');

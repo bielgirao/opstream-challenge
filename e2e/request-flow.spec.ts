@@ -39,6 +39,16 @@ test.describe('request flow', () => {
     await expect(page.locator(SOFTWARE.quantity)).toHaveValue('125');
   });
 
+  test('answers are normalised when leaving the field', async ({ page }) => {
+    await startSoftwareRequest(page);
+    await page.locator(SOFTWARE.itemName).fill('  Figma  ');
+    await page.locator(SOFTWARE.quantity).pressSequentially('007');
+    await page.locator(SOFTWARE.quantity).blur();
+
+    await expect(page.locator(SOFTWARE.itemName)).toHaveValue('Figma');
+    await expect(page.locator(SOFTWARE.quantity)).toHaveValue('7');
+  });
+
   test('answers autosave and survive a refresh', async ({ page }) => {
     const url = await startSoftwareRequest(page);
     await fillRequestedItem(page);

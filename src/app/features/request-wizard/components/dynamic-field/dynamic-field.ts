@@ -13,6 +13,7 @@ import {
   UiNumberInput,
   UiRadioGroup,
   UiToggleSwitch,
+  UiTrimOnBlur,
 } from '../../../../shared/ui';
 
 /**
@@ -21,7 +22,15 @@ import {
  */
 @Component({
   selector: 'app-dynamic-field',
-  imports: [ReactiveFormsModule, UiFieldCard, UiInput, UiNumberInput, UiRadioGroup, UiToggleSwitch],
+  imports: [
+    ReactiveFormsModule,
+    UiFieldCard,
+    UiInput,
+    UiNumberInput,
+    UiRadioGroup,
+    UiToggleSwitch,
+    UiTrimOnBlur,
+  ],
   templateUrl: './dynamic-field.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

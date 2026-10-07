@@ -140,6 +140,19 @@ describe('UiNumberInput', () => {
     expect(input.value).toBe('');
   });
 
+  it.each([
+    ['007', 0, '7'],
+    ['1.', 2, '1'],
+    ['.5', 2, '0.5'],
+    ['.', 2, ''],
+  ])('normalises %j to %j on blur (%i places)', (typed, places, shown) => {
+    const { input, host, type } = setup(places as number);
+    type(typed as string);
+    input.dispatchEvent(new Event('blur'));
+    expect(input.value).toBe(shown);
+    expect(host.control.value).toBe(shown === '' ? null : Number(shown));
+  });
+
   it('marks the control as touched on blur and follows its disabled state', () => {
     const { input, host } = setup();
     input.dispatchEvent(new Event('blur'));
