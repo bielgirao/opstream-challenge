@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { fillRequestedItem, fillVendorInfo, saveIndicator, startSoftwareRequest } from './support';
 
-/** Regenerates the README screenshots: npm run screenshots */
-test.describe('README screenshots @screenshots', () => {
+/** Regenerates the README screenshots: npm run media */
+test.describe('README screenshots @media', () => {
   test.use({ viewport: { width: 1200, height: 760 } });
   const shot = (name: string) => `docs/screenshots/${name}.png`;
 

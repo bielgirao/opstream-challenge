@@ -1,7 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4321;
-const SCREENSHOTS = !!process.env['SCREENSHOTS'];
+const MEDIA = !!process.env['MEDIA'];
+/** Set to test a deployed app instead of a local dev server, e.g. E2E_BASE_URL=https://example.com */
+const BASE_URL = process.env['E2E_BASE_URL'];
 
 /**
  * End-to-end tests against the real app (with its in-browser mock backend).
@@ -15,24 +17,26 @@ export default defineConfig({
   retries: process.env['CI'] ? 1 : 0,
   reporter: process.env['CI'] ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
-    baseURL: `http://localhost:${PORT}`,
+    baseURL: BASE_URL ?? `http://localhost:${PORT}`,
     trace: 'retain-on-failure',
   },
-  projects: SCREENSHOTS
-    ? // README screenshots, generated on demand: npm run screenshots
-      [{ name: 'screenshots', use: { ...devices['Desktop Chrome'] }, grep: /@screenshots/ }]
+  projects: MEDIA
+    ? // README screenshots and demo GIF, generated on demand: npm run media
+      [{ name: 'media', use: { ...devices['Desktop Chrome'] }, grep: /@media/ }]
     : [
         {
           name: 'desktop',
           use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } },
-          grepInvert: /@mobile|@screenshots/,
+          grepInvert: /@mobile|@media/,
         },
         { name: 'mobile', use: { ...devices['Pixel 7'] }, grep: /@mobile/ },
       ],
-  webServer: {
-    command: `npm start -- --port ${PORT}`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env['CI'],
-    timeout: 120_000,
-  },
+  webServer: BASE_URL
+    ? undefined
+    : {
+        command: `npm start -- --port ${PORT}`,
+        url: `http://localhost:${PORT}`,
+        reuseExistingServer: !process.env['CI'],
+        timeout: 120_000,
+      },
 });
