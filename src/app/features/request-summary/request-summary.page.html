@@ -12,7 +12,14 @@
     @case ('error') {
       <ui-notification class="summary__message" type="error" title="We couldn't load this request">
         Check your connection and try again.
-        <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="reload()">
+        <button
+          uiButton
+          uiNotificationActions
+          type="button"
+          variant="secondary"
+          size="32"
+          (click)="reload()"
+        >
           Try again
         </button>
       </ui-notification>
@@ -29,7 +36,9 @@
             <h2 class="summary__heading">Summary</h2>
             @for (section of sections(); track section.id) {
               <section class="summary__section" [attr.aria-labelledby]="'summary-' + section.id">
-                <h3 class="summary__section-title" [id]="'summary-' + section.id">{{ section.title }}</h3>
+                <h3 class="summary__section-title" [id]="'summary-' + section.id">
+                  {{ section.title }}
+                </h3>
                 <dl class="summary__list">
                   @for (row of section.rows; track row.id) {
                     <div class="summary__row">
@@ -47,7 +56,9 @@
       } @else {
         <ui-notification class="summary__message" type="info" title="We couldn't find this request">
           It may have been started in another browser or removed.
-          <a uiNotificationActions class="summary__link" routerLink="/requests/new">Start a new request</a>
+          <a uiNotificationActions class="summary__link" routerLink="/requests/new"
+            >Start a new request</a
+          >
         </ui-notification>
       }
     }

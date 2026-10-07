@@ -108,16 +108,18 @@ describe('autosave', () => {
       const save = () => {
         throw new Error('should not save');
       };
-      expectObservable(
-        statesOf(autosave(changes, NEVER, save, { q1: 'restored' }, OPTIONS)),
-      ).toBe('-p 799ms d', STATES);
+      expectObservable(statesOf(autosave(changes, NEVER, save, { q1: 'restored' }, OPTIONS))).toBe(
+        '-p 799ms d',
+        STATES,
+      );
     });
   });
 
   it('saves different questions independently', () => {
     scheduler().run(({ hot, cold, expectObservable }) => {
       const changes = hot('-a-b', { a: change('x', 'q1'), b: change('y', 'q2') });
-      const save = (c: AnswerChange) => (c.questionId === 'q1' ? cold('500ms (x|)') : cold('100ms (x|)'));
+      const save = (c: AnswerChange) =>
+        c.questionId === 'q1' ? cold('500ms (x|)') : cold('100ms (x|)');
       expectObservable(statesOf(autosave(changes, NEVER, save, {}, OPTIONS))).toBe(
         '-a-b 797ms c-d 99ms e 397ms f',
         {

@@ -22,7 +22,11 @@ export const sectionAccessGuard: CanActivateFn = (route) => {
   const active = session.active();
   if (active?.id !== requestId) return true;
 
-  const target = sectionRedirect(active.schema, active.form, route.paramMap.get('sectionId') ?? undefined);
+  const target = sectionRedirect(
+    active.schema,
+    active.form,
+    route.paramMap.get('sectionId') ?? undefined,
+  );
   return target ? router.createUrlTree(['/requests', requestId, 'sections', target]) : true;
 };
 

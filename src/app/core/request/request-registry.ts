@@ -45,7 +45,9 @@ export class RequestRegistry {
   private read(): Record<string, RegistryEntry> {
     try {
       const parsed: unknown = JSON.parse(this.storage.getItem(STORAGE_KEY) ?? '{}');
-      return typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, RegistryEntry>) : {};
+      return typeof parsed === 'object' && parsed !== null
+        ? (parsed as Record<string, RegistryEntry>)
+        : {};
     } catch {
       return {};
     }

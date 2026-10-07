@@ -27,7 +27,13 @@ import {
   DEFAULT_AUTOSAVE_OPTIONS,
   isSettled,
 } from './autosave';
-import { AnswerControl, Answers, buildRequestForm, controlsById, RequestForm } from './request-form';
+import {
+  AnswerControl,
+  Answers,
+  buildRequestForm,
+  controlsById,
+  RequestForm,
+} from './request-form';
 import { RequestRegistry } from './request-registry';
 
 export const AUTOSAVE_OPTIONS = new InjectionToken<AutosaveOptions>('AUTOSAVE_OPTIONS', {
@@ -91,7 +97,9 @@ export class RequestSession {
 
     return this.requestApi.getDraft(requestId).pipe(
       catchError((error: unknown) =>
-        error instanceof HttpErrorResponse && error.status === 404 ? of(null) : throwError(() => error),
+        error instanceof HttpErrorResponse && error.status === 404
+          ? of(null)
+          : throwError(() => error),
       ),
       switchMap((draft) => {
         const schemaId = draft?.schemaId ?? this.registry.get(requestId)?.schemaId;

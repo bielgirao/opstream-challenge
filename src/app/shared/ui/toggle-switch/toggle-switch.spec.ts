@@ -5,7 +5,9 @@ import { UiToggleSwitch } from './toggle-switch';
 
 @Component({
   imports: [ReactiveFormsModule, UiToggleSwitch],
-  template: `<ui-toggle-switch inputId="shipping" [formControl]="control">Requires shipping</ui-toggle-switch>`,
+  template: `<ui-toggle-switch inputId="shipping" [formControl]="control"
+    >Requires shipping</ui-toggle-switch
+  >`,
 })
 class Host {
   control = new FormControl(false);

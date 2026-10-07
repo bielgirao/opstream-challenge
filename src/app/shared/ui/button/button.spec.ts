@@ -4,7 +4,9 @@ import { UiButton } from './button';
 
 @Component({
   imports: [UiButton],
-  template: `<button uiButton type="button" [loading]="loading()" [disabled]="disabled()">Submit</button>`,
+  template: `<button uiButton type="button" [loading]="loading()" [disabled]="disabled()">
+    Submit
+  </button>`,
 })
 class Host {
   loading = signal(false);

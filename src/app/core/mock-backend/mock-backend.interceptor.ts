@@ -73,7 +73,11 @@ function saveAnswer(
 ): Outcome {
   const body = req.body as Partial<SaveAnswerBody> | null;
   if (!body || typeof body.schemaId !== 'string' || !isAnswerValue(body.value)) {
-    return error(req, 400, 'Body must be { schemaId: string, value: string | number | boolean | null }');
+    return error(
+      req,
+      400,
+      'Body must be { schemaId: string, value: string | number | boolean | null }',
+    );
   }
 
   const schema = MOCK_SCHEMAS.find((s) => s.id === body.schemaId);

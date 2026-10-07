@@ -5,7 +5,9 @@ describe('UiPlaygroundPage', () => {
   it('renders every component section', async () => {
     const fixture = TestBed.createComponent(UiPlaygroundPage);
     await fixture.whenStable();
-    const headings = [...(fixture.nativeElement as HTMLElement).querySelectorAll('h2')].map((h) => h.textContent);
+    const headings = [...(fixture.nativeElement as HTMLElement).querySelectorAll('h2')].map(
+      (h) => h.textContent,
+    );
     expect(headings).toEqual([
       'Button',
       'Chip',

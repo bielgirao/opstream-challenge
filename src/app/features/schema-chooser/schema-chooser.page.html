@@ -13,9 +13,20 @@
       }
 
       @case ('error') {
-        <ui-notification class="chooser__message" type="error" title="We couldn't load the request types">
+        <ui-notification
+          class="chooser__message"
+          type="error"
+          title="We couldn't load the request types"
+        >
           Check your connection and try again.
-          <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="retry()">
+          <button
+            uiButton
+            uiNotificationActions
+            type="button"
+            variant="secondary"
+            size="32"
+            (click)="retry()"
+          >
             Try again
           </button>
         </ui-notification>

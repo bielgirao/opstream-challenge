@@ -27,8 +27,24 @@ describe('normalizeSchema', () => {
     );
 
     expect(result?.sections[0].fields).toEqual([
-      { id: '1758177604', label: 'Item Name', type: 'text', required: true, options: [], defaultValue: null, decimalPlaces: 0 },
-      { id: '2389182391823812', label: 'Shipping', type: 'toggle', required: false, options: [], defaultValue: false, decimalPlaces: 0 },
+      {
+        id: '1758177604',
+        label: 'Item Name',
+        type: 'text',
+        required: true,
+        options: [],
+        defaultValue: null,
+        decimalPlaces: 0,
+      },
+      {
+        id: '2389182391823812',
+        label: 'Shipping',
+        type: 'toggle',
+        required: false,
+        options: [],
+        defaultValue: false,
+        decimalPlaces: 0,
+      },
     ]);
     expect(warn).not.toHaveBeenCalled();
   });
@@ -98,7 +114,9 @@ describe('normalizeSchema', () => {
   });
 
   it('rejects malformed input instead of throwing', () => {
-    expect(normalizeSchema({ id: 'x', title: 'X' } as unknown as RawRequestSchema, warn)).toBeNull();
+    expect(
+      normalizeSchema({ id: 'x', title: 'X' } as unknown as RawRequestSchema, warn),
+    ).toBeNull();
     expect(normalizeSchema(null as unknown as RawRequestSchema, warn)).toBeNull();
   });
 });

@@ -10,8 +10,7 @@ import {
 
 type Warn = (message: string) => void;
 
-const isFieldType = (type: unknown): type is FieldType =>
-  FIELD_TYPES.includes(type as FieldType);
+const isFieldType = (type: unknown): type is FieldType => FIELD_TYPES.includes(type as FieldType);
 
 /** Upper bound for `decimalPlaces`; beyond this, floating point makes the rule meaningless. */
 export const MAX_DECIMAL_PLACES = 6;
@@ -73,11 +72,14 @@ export function normalizeSchemas(
 
 function normalizeField(raw: RawSchemaField, schemaId: string, warn: Warn): SchemaField | null {
   if (!isFieldType(raw?.type)) {
-    warn(`[${schemaId}] Skipping field ${raw?.id} ("${raw?.label}"): unsupported type "${raw?.type}"`);
+    warn(
+      `[${schemaId}] Skipping field ${raw?.id} ("${raw?.label}"): unsupported type "${raw?.type}"`,
+    );
     return null;
   }
 
-  const options = raw.type === 'radio' ? (raw.options ?? []).filter((o) => typeof o === 'string') : [];
+  const options =
+    raw.type === 'radio' ? (raw.options ?? []).filter((o) => typeof o === 'string') : [];
   if (raw.type === 'radio' && options.length === 0) {
     warn(`[${schemaId}] Skipping radio field ${raw.id} ("${raw.label}"): no options`);
     return null;
@@ -97,9 +99,15 @@ function normalizeField(raw: RawSchemaField, schemaId: string, warn: Warn): Sche
 function normalizeDecimalPlaces(raw: RawSchemaField, schemaId: string, warn: Warn): number {
   const { decimalPlaces } = raw;
   if (decimalPlaces === undefined) return 0;
-  if (Number.isInteger(decimalPlaces) && decimalPlaces >= 0 && decimalPlaces <= MAX_DECIMAL_PLACES) {
+  if (
+    Number.isInteger(decimalPlaces) &&
+    decimalPlaces >= 0 &&
+    decimalPlaces <= MAX_DECIMAL_PLACES
+  ) {
     return decimalPlaces;
   }
-  warn(`[${schemaId}] Field ${raw.id}: invalid decimalPlaces ${JSON.stringify(decimalPlaces)}, using 0`);
+  warn(
+    `[${schemaId}] Field ${raw.id}: invalid decimalPlaces ${JSON.stringify(decimalPlaces)}, using 0`,
+  );
   return 0;
 }

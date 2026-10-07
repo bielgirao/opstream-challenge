@@ -6,8 +6,16 @@ import { RawRequestSchema } from '../models';
 import { SchemaApiService } from './schema-api.service';
 
 const RAW: RawRequestSchema[] = [
-  { id: 'a', title: 'A', sections: [{ id: 's', title: 'S', fields: [{ id: 1, label: 'Name', type: 'text' }] }] },
-  { id: 'b', title: 'B', sections: [{ id: 's', title: 'S', fields: [{ id: 2, label: 'File', type: 'upload' }] }] },
+  {
+    id: 'a',
+    title: 'A',
+    sections: [{ id: 's', title: 'S', fields: [{ id: 1, label: 'Name', type: 'text' }] }],
+  },
+  {
+    id: 'b',
+    title: 'B',
+    sections: [{ id: 's', title: 'S', fields: [{ id: 2, label: 'File', type: 'upload' }] }],
+  },
 ];
 
 function setup() {

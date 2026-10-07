@@ -5,7 +5,12 @@ import { Observable, of, throwError } from 'rxjs';
 import { routes } from '../app/app.routes';
 import { RequestApiService, SchemaApiService } from '../app/core/api';
 import { MOCK_SCHEMAS } from '../app/core/mock-backend/schemas.data';
-import { normalizeSchemas, RequestDraft, RequestSchema, SaveAnswerResponse } from '../app/core/models';
+import {
+  normalizeSchemas,
+  RequestDraft,
+  RequestSchema,
+  SaveAnswerResponse,
+} from '../app/core/models';
 import { AUTOSAVE_OPTIONS, REQUEST_REGISTRY_STORAGE } from '../app/core/request';
 import { MemoryStorage } from './memory-storage';
 
@@ -38,7 +43,9 @@ export function provideRequestFlowTesting(overrides: Partial<FakeApis> = {}): {
   apis: { [K in keyof FakeApis]: ReturnType<typeof vi.fn<FakeApis[K]>> };
 } {
   const apis = {
-    schemas: vi.fn<FakeApis['schemas']>(overrides.schemas ?? (() => of([SOFTWARE_SCHEMA, HARDWARE_SCHEMA]))),
+    schemas: vi.fn<FakeApis['schemas']>(
+      overrides.schemas ?? (() => of([SOFTWARE_SCHEMA, HARDWARE_SCHEMA])),
+    ),
     getDraft: vi.fn<FakeApis['getDraft']>(overrides.getDraft ?? notFound),
     saveAnswer: vi.fn<FakeApis['saveAnswer']>(
       overrides.saveAnswer ?? (() => of({ questionId: '', value: null, savedAt: '' })),

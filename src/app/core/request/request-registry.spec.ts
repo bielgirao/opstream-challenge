@@ -3,7 +3,9 @@ import { MemoryStorage } from '../../../testing/memory-storage';
 import { REQUEST_REGISTRY_STORAGE, RequestRegistry } from './request-registry';
 
 function setup(storage: Storage = new MemoryStorage()) {
-  TestBed.configureTestingModule({ providers: [{ provide: REQUEST_REGISTRY_STORAGE, useValue: storage }] });
+  TestBed.configureTestingModule({
+    providers: [{ provide: REQUEST_REGISTRY_STORAGE, useValue: storage }],
+  });
   return TestBed.inject(RequestRegistry);
 }
 

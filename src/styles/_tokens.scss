@@ -44,7 +44,9 @@
   --color-bg-page: var(--mono-gray4);
   --color-bg-surface: var(--mono-white);
   --color-bg-disabled: var(--mono-gray4); // disabled inputs (on white cards)
-  --color-bg-disabled-strong: var(--mono-gray3); // disabled buttons (must stand out on the page background)
+  --color-bg-disabled-strong: var(
+    --mono-gray3
+  ); // disabled buttons (must stand out on the page background)
 
   // Text
   --color-text-primary: var(--mono-dark1);
@@ -69,7 +71,11 @@
 
   // Feedback
   --color-danger: var(--states-red);
-  --color-danger-subtle: color-mix(in srgb, var(--states-red) 8%, white); // assumed (red97 not confirmed)
+  --color-danger-subtle: color-mix(
+    in srgb,
+    var(--states-red) 8%,
+    white
+  ); // assumed (red97 not confirmed)
   --color-warning: var(--states-orange);
   --color-warning-subtle: var(--states-highlighter);
   --color-info: var(--states-link-blue);
@@ -103,18 +109,30 @@
 
   // Text styles as `font` shorthands, named after the design system.
   // Usage: `font: var(--text-body1);`
-  --text-h1: var(--font-weight-bold) var(--font-size-24) / var(--line-height-base) var(--font-family-base);
-  --text-h2: var(--font-weight-bold) var(--font-size-20) / var(--line-height-base) var(--font-family-base);
-  --text-h3: var(--font-weight-semibold) var(--font-size-18) / var(--line-height-base) var(--font-family-base);
-  --text-h4: var(--font-weight-semibold) var(--font-size-16) / var(--line-height-base) var(--font-family-base);
-  --text-sub-h1: var(--font-weight-semibold) var(--font-size-14) / var(--line-height-base) var(--font-family-base);
-  --text-sub-h2: var(--font-weight-semibold) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
-  --text-body1: var(--font-weight-medium) var(--font-size-14) / var(--line-height-base) var(--font-family-base);
-  --text-body2: var(--font-weight-medium) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
-  --text-caption: var(--font-weight-medium) var(--font-size-10) / var(--line-height-base) var(--font-family-base);
-  --text-button: var(--font-weight-bold) var(--font-size-14) / var(--line-height-base) var(--font-family-base);
-  --text-button2: var(--font-weight-bold) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
-  --text-overline: var(--font-weight-bold) var(--font-size-12) / var(--line-height-base) var(--font-family-base);
+  --text-h1: var(--font-weight-bold) var(--font-size-24) / var(--line-height-base)
+    var(--font-family-base);
+  --text-h2: var(--font-weight-bold) var(--font-size-20) / var(--line-height-base)
+    var(--font-family-base);
+  --text-h3: var(--font-weight-semibold) var(--font-size-18) / var(--line-height-base)
+    var(--font-family-base);
+  --text-h4: var(--font-weight-semibold) var(--font-size-16) / var(--line-height-base)
+    var(--font-family-base);
+  --text-sub-h1: var(--font-weight-semibold) var(--font-size-14) / var(--line-height-base)
+    var(--font-family-base);
+  --text-sub-h2: var(--font-weight-semibold) var(--font-size-12) / var(--line-height-base)
+    var(--font-family-base);
+  --text-body1: var(--font-weight-medium) var(--font-size-14) / var(--line-height-base)
+    var(--font-family-base);
+  --text-body2: var(--font-weight-medium) var(--font-size-12) / var(--line-height-base)
+    var(--font-family-base);
+  --text-caption: var(--font-weight-medium) var(--font-size-10) / var(--line-height-base)
+    var(--font-family-base);
+  --text-button: var(--font-weight-bold) var(--font-size-14) / var(--line-height-base)
+    var(--font-family-base);
+  --text-button2: var(--font-weight-bold) var(--font-size-12) / var(--line-height-base)
+    var(--font-family-base);
+  --text-overline: var(--font-weight-bold) var(--font-size-12) / var(--line-height-base)
+    var(--font-family-base);
 
   // ---------------------------------------------------------------------------
   // Spacing — 8px grid

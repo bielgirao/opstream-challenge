@@ -4,7 +4,9 @@ import { UiChip } from './chip';
 
 @Component({
   imports: [UiChip],
-  template: `<button uiChip type="button" [selected]="selected()" (click)="clicks = clicks + 1">Software</button>`,
+  template: `<button uiChip type="button" [selected]="selected()" (click)="clicks = clicks + 1">
+    Software
+  </button>`,
 })
 class Host {
   selected = signal(false);

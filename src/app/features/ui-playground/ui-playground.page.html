@@ -64,7 +64,12 @@
         />
       </ui-field-card>
 
-      <ui-field-card fieldId="pg-location" label="Vendor Location" group [error]="errorFor('location')">
+      <ui-field-card
+        fieldId="pg-location"
+        label="Vendor Location"
+        group
+        [error]="errorFor('location')"
+      >
         <ui-radio-group
           name="pg-location"
           formControlName="location"
@@ -90,7 +95,12 @@
     <h2>Field error states</h2>
     <div class="stack">
       <ui-field-card fieldId="pg-err-text" label="Item Name" error="This field is required">
-        <input uiInput id="pg-err-text" invalid [attr.aria-describedby]="fieldErrorId('pg-err-text')" />
+        <input
+          uiInput
+          id="pg-err-text"
+          invalid
+          [attr.aria-describedby]="fieldErrorId('pg-err-text')"
+        />
       </ui-field-card>
       <ui-field-card fieldId="pg-err-radio" label="Vendor Location" group error="Choose an option">
         <ui-radio-group
@@ -149,7 +159,9 @@
       <ui-notification type="success" title="Good news!">
         Finance automatically approves purchases included in the budget.
       </ui-notification>
-      <ui-notification type="info" appearance="outlined">Draft restored from your last session.</ui-notification>
+      <ui-notification type="info" appearance="outlined"
+        >Draft restored from your last session.</ui-notification
+      >
     </div>
   </section>
 

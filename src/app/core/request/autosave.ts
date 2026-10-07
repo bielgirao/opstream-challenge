@@ -87,7 +87,9 @@ export function autosave(
             retry < options.retryDelaysMs.length && isTransientError(error)
               ? concat(
                   of(stateOf('retrying')),
-                  timer(options.retryDelaysMs[retry]).pipe(switchMap(() => attempt(change, retry + 1))),
+                  timer(options.retryDelaysMs[retry]).pipe(
+                    switchMap(() => attempt(change, retry + 1)),
+                  ),
                 )
               : of(stateOf('error')),
           ),

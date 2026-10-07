@@ -24,7 +24,14 @@ async function setup(overrides: Partial<FakeApis> = {}) {
   const session = TestBed.inject(RequestSession);
   const router = TestBed.inject(Router);
   const stable = () => harness.fixture.whenStable();
-  return { harness, apis, session, router, stable, el: () => harness.routeNativeElement as HTMLElement };
+  return {
+    harness,
+    apis,
+    session,
+    router,
+    stable,
+    el: () => harness.routeNativeElement as HTMLElement,
+  };
 }
 
 async function startRequest() {
@@ -45,10 +52,9 @@ describe('RequestWizardPage', () => {
   it('renders the current section with its fields', async () => {
     const { el } = await startRequest();
     expect(el().querySelector('h1')?.textContent).toBe('Requested Item');
-    expect([...el().querySelectorAll('.ui-field-card__label')].map((l) => l.textContent?.trim())).toEqual([
-      'Item Name',
-      'Quantity',
-    ]);
+    expect(
+      [...el().querySelectorAll('.ui-field-card__label')].map((l) => l.textContent?.trim()),
+    ).toEqual(['Item Name', 'Quantity']);
   });
 
   it('blocks Next on invalid input, showing errors and focusing the first invalid field', async () => {
@@ -70,7 +76,9 @@ describe('RequestWizardPage', () => {
 
     expect(ctx.router.url).toBe(`/requests/${ctx.id}/sections/vendor-info`);
     expect(ctx.el().querySelector('h1')?.textContent).toBe('Vendor Information');
-    const buttons = [...ctx.el().querySelectorAll('app-wizard-actions button')].map((b) => b.textContent?.trim());
+    const buttons = [...ctx.el().querySelectorAll('app-wizard-actions button')].map((b) =>
+      b.textContent?.trim(),
+    );
     expect(buttons).toEqual(['Previous', 'Submit']);
   });
 
@@ -90,7 +98,12 @@ describe('RequestWizardPage', () => {
     clickButton(ctx.el(), 'Next');
     await ctx.stable();
     typeInto(ctx.el(), `#field-${SOFTWARE.vendorName}`, 'Figma Inc.');
-    ctx.el().querySelector<HTMLInputElement>(`input[name="field-${SOFTWARE.vendorLocation}"][value="UK"]`)!.click();
+    ctx
+      .el()
+      .querySelector<HTMLInputElement>(
+        `input[name="field-${SOFTWARE.vendorLocation}"][value="UK"]`,
+      )!
+      .click();
     await ctx.stable();
 
     clickButton(ctx.el(), 'Submit');
@@ -152,7 +165,12 @@ describe('RequestWizardPage', () => {
 
   it('offers a retry when the request fails to load', async () => {
     let attempts = 0;
-    const draft: RequestDraft = { id: 'r1', schemaId: 'software-request', answers: {}, updatedAt: '' };
+    const draft: RequestDraft = {
+      id: 'r1',
+      schemaId: 'software-request',
+      answers: {},
+      updatedAt: '',
+    };
     const ctx = await setup({ getDraft: () => (attempts++ === 0 ? serverError() : of(draft)) });
     await ctx.harness.navigateByUrl('/requests/r1/sections/requested-item', RequestWizardPage);
     await ctx.stable();

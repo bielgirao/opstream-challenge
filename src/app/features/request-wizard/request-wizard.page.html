@@ -18,7 +18,14 @@
     <div class="wizard wizard--message">
       <ui-notification type="error" title="We couldn't load this request">
         Your answers are safe. Check your connection and try again.
-        <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="reload()">
+        <button
+          uiButton
+          uiNotificationActions
+          type="button"
+          variant="secondary"
+          size="32"
+          (click)="reload()"
+        >
           Try again
         </button>
       </ui-notification>
@@ -33,7 +40,9 @@
       <div class="wizard wizard--message">
         <ui-notification type="info" title="We couldn't find this request">
           It may have been started in another browser or removed.
-          <a uiNotificationActions class="wizard__link" routerLink="/requests/new">Start a new request</a>
+          <a uiNotificationActions class="wizard__link" routerLink="/requests/new"
+            >Start a new request</a
+          >
         </ui-notification>
       </div>
     } @else if (currentSection) {
@@ -54,7 +63,14 @@
           @if (showSaveFailure()) {
             <ui-notification type="error" title="Some answers weren't saved">
               Your request can't be submitted until every answer is saved.
-              <button uiButton uiNotificationActions type="button" variant="secondary" size="32" (click)="retrySaves()">
+              <button
+                uiButton
+                uiNotificationActions
+                type="button"
+                variant="secondary"
+                size="32"
+                (click)="retrySaves()"
+              >
                 Retry saving
               </button>
             </ui-notification>

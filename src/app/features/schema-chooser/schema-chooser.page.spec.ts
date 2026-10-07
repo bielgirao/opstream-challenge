@@ -33,7 +33,10 @@ describe('SchemaChooserPage', () => {
   it('lists the schemas with the first one preselected', async () => {
     const { el } = await open(() => of([SOFTWARE_SCHEMA, HARDWARE_SCHEMA]));
     const chips = [...el.querySelectorAll('button[uichip]')];
-    expect(chips.map((c) => c.textContent?.trim())).toEqual(['Software Request', 'Hardware Request']);
+    expect(chips.map((c) => c.textContent?.trim())).toEqual([
+      'Software Request',
+      'Hardware Request',
+    ]);
     expect(chips.map((c) => c.getAttribute('aria-pressed'))).toEqual(['true', 'false']);
   });
 

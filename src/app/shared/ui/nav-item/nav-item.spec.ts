@@ -5,7 +5,9 @@ import { NavItemStatus, UiNavItem } from './nav-item';
 @Component({
   imports: [UiNavItem],
   template: `
-    <a uiNavItem href="#" [active]="active()" [disabled]="disabled()" [status]="status()">Vendor Information</a>
+    <a uiNavItem href="#" [active]="active()" [disabled]="disabled()" [status]="status()"
+      >Vendor Information</a
+    >
   `,
 })
 class Host {
@@ -42,13 +44,16 @@ describe('UiNavItem', () => {
     ['saving', 'ui-loader', '(saving)'],
     ['done', 'ui-icon', '(complete)'],
     ['error', 'ui-icon', '(not saved)'],
-  ] as const)('shows the %s status with an icon and text for screen readers', async (status, element, text) => {
-    const { fixture, host, link } = setup();
-    host.status.set(status);
-    await fixture.whenStable();
-    expect(link.querySelector(element)).not.toBeNull();
-    expect(link.querySelector('.visually-hidden')?.textContent).toBe(text);
-  });
+  ] as const)(
+    'shows the %s status with an icon and text for screen readers',
+    async (status, element, text) => {
+      const { fixture, host, link } = setup();
+      host.status.set(status);
+      await fixture.whenStable();
+      expect(link.querySelector(element)).not.toBeNull();
+      expect(link.querySelector('.visually-hidden')?.textContent).toBe(text);
+    },
+  );
 
   it('shows no status by default', () => {
     const { link } = setup();

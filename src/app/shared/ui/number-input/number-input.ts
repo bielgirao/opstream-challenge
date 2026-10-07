@@ -30,7 +30,10 @@ export function parseNumericText(text: string): number | null {
  * the first decimal point with up to `decimalPlaces` digits (commas count as decimal points).
  */
 export function sanitizeNumericText(text: string, decimalPlaces: number): string {
-  const [integer, ...rest] = text.replace(/,/g, '.').replace(/[^\d.]/g, '').split('.');
+  const [integer, ...rest] = text
+    .replace(/,/g, '.')
+    .replace(/[^\d.]/g, '')
+    .split('.');
   if (decimalPlaces === 0 || rest.length === 0) return integer;
   return `${integer}.${rest.join('').slice(0, decimalPlaces)}`;
 }

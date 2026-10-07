@@ -68,9 +68,12 @@ describe('RequestSession', () => {
   it('restores a saved draft', async () => {
     const { session, http } = setup();
     const result = firstValueFrom(session.open('r1'));
-    http
-      .expectOne('/api/requests/r1')
-      .flush({ id: 'r1', schemaId: 'software-request', answers: { [ITEM]: 'Figma' }, updatedAt: '' });
+    http.expectOne('/api/requests/r1').flush({
+      id: 'r1',
+      schemaId: 'software-request',
+      answers: { [ITEM]: 'Figma' },
+      updatedAt: '',
+    });
 
     expect(await result).toBe('ready');
     expect(control(session, ITEM).value).toBe('Figma');
@@ -149,7 +152,9 @@ describe('RequestSession', () => {
     const { id } = session.start(software);
     control(session, ITEM).setValue('Figma');
     await vi.advanceTimersByTimeAsync(800);
-    http.expectOne(`/api/requests/${id}/question/${ITEM}`).flush(null, { status: 500, statusText: 'Error' });
+    http
+      .expectOne(`/api/requests/${id}/question/${ITEM}`)
+      .flush(null, { status: 500, statusText: 'Error' });
     expect(session.saveStatus()).toBe('error');
 
     session.retryFailed();

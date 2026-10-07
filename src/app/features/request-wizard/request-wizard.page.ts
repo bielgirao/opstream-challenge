@@ -25,7 +25,13 @@ import {
   sectionRedirect,
 } from '../../core/request';
 import { LoadState, toLoadState } from '../../core/utils/load-state';
-import { NavItemStatus, UiButton, UiNotification, UiSaveIndicator, UiSkeleton } from '../../shared/ui';
+import {
+  NavItemStatus,
+  UiButton,
+  UiNotification,
+  UiSaveIndicator,
+  UiSkeleton,
+} from '../../shared/ui';
 import { DynamicField } from './components/dynamic-field/dynamic-field';
 import { SectionNav, SectionNavItem } from './components/section-nav/section-nav';
 import { WizardActions } from './components/wizard-actions/wizard-actions';
@@ -135,7 +141,9 @@ export class RequestWizardPage {
         }
         const target = sectionRedirect(request.schema, request.form, sectionId);
         if (target) {
-          void this.router.navigate(['/requests', request.id, 'sections', target], { replaceUrl: true });
+          void this.router.navigate(['/requests', request.id, 'sections', target], {
+            replaceUrl: true,
+          });
         }
       });
     });
@@ -206,16 +214,18 @@ export class RequestWizardPage {
   private goToSection(sectionId: string): void {
     const requestId = this.request()?.id;
     if (!requestId) return;
-    void this.router.navigate(['/requests', requestId, 'sections', sectionId]).then(() =>
-      afterNextRender(() => this.focus('.wizard__title'), { injector: this.injector }),
-    );
+    void this.router
+      .navigate(['/requests', requestId, 'sections', sectionId])
+      .then(() => afterNextRender(() => this.focus('.wizard__title'), { injector: this.injector }));
   }
 
   private focusFirstInvalidField(): void {
     afterNextRender(
       () => {
         const invalid = this.query('[aria-invalid="true"]');
-        this.focus(invalid?.matches('input') ? invalid : invalid?.querySelector<HTMLElement>('input'));
+        this.focus(
+          invalid?.matches('input') ? invalid : invalid?.querySelector<HTMLElement>('input'),
+        );
       },
       { injector: this.injector },
     );

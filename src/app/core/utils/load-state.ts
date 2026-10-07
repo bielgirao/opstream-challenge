@@ -2,9 +2,7 @@ import { catchError, map, Observable, of, OperatorFunction, startWith } from 'rx
 
 /** The three states every async boundary must render (ADR-0009). */
 export type LoadState<T> =
-  | { status: 'loading' }
-  | { status: 'error'; error: unknown }
-  | { status: 'ready'; value: T };
+  { status: 'loading' } | { status: 'error'; error: unknown } | { status: 'ready'; value: T };
 
 /** Wraps a source so it never errors: loading → ready | error. */
 export function toLoadState<T>(): OperatorFunction<T, LoadState<T>> {

@@ -4,7 +4,13 @@ import { SectionNav, SectionNavItem } from './section-nav';
 
 const items: SectionNavItem[] = [
   { id: 'requested-item', title: 'Requested Item', active: false, disabled: false, status: 'done' },
-  { id: 'vendor-info', title: 'Vendor Information', active: true, disabled: false, status: 'saving' },
+  {
+    id: 'vendor-info',
+    title: 'Vendor Information',
+    active: true,
+    disabled: false,
+    status: 'saving',
+  },
   { id: 'approval', title: 'Approval', active: false, disabled: true, status: 'none' },
 ];
 

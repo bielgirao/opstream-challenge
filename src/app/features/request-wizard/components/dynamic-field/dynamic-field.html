@@ -30,7 +30,13 @@
     </ui-field-card>
   }
   @case ('radio') {
-    <ui-field-card [fieldId]="id" [label]="f.label" group [optional]="showOptional()" [error]="error()">
+    <ui-field-card
+      [fieldId]="id"
+      [label]="f.label"
+      group
+      [optional]="showOptional()"
+      [error]="error()"
+    >
       <ui-radio-group
         [name]="id"
         [options]="f.options"

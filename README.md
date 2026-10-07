@@ -21,17 +21,17 @@ No backend is needed: an HTTP interceptor answers `/api/*` in the browser.
 
 ## Try it
 
-| What | How |
-|---|---|
-| The happy path | Open `/`, pick a type, fill both sections, submit. |
-| Validation | Click **Next** with empty fields: errors appear and focus jumps to the first invalid field. |
-| Numbers | Type letters, `-`, `e` or `.` into **Quantity**: they never reach the field (quantities are whole). |
-| Autosave | Type and pause: `Saving…` → `Saved`. The sidebar shows saving / done / error per section. |
-| Refresh | Reload in the middle of the form: answers come back from the (mock) server. |
-| Guarded URLs | Paste the URL of section 2 while section 1 is invalid: you are sent back to section 1. |
-| Save failures | Add `?mockSaveFailureRate=1` to the URL: `Error – retrying…`, two retries, then `Couldn't save · Retry`; Submit is blocked. |
-| Loading failures | Add `?mockFailureRate=1`: the chooser shows an error with **Try again**. `?mockFailureRate=0` turns random failures off. |
-| Component catalogue | `/ui` renders every shared component and its states. |
+| What                | How                                                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| The happy path      | Open `/`, pick a type, fill both sections, submit.                                                                          |
+| Validation          | Click **Next** with empty fields: errors appear and focus jumps to the first invalid field.                                 |
+| Numbers             | Type letters, `-`, `e` or `.` into **Quantity**: they never reach the field (quantities are whole).                         |
+| Autosave            | Type and pause: `Saving…` → `Saved`. The sidebar shows saving / done / error per section.                                   |
+| Refresh             | Reload in the middle of the form: answers come back from the (mock) server.                                                 |
+| Guarded URLs        | Paste the URL of section 2 while section 1 is invalid: you are sent back to section 1.                                      |
+| Save failures       | Add `?mockSaveFailureRate=1` to the URL: `Error – retrying…`, two retries, then `Couldn't save · Retry`; Submit is blocked. |
+| Loading failures    | Add `?mockFailureRate=1`: the chooser shows an error with **Try again**. `?mockFailureRate=0` turns random failures off.    |
+| Component catalogue | `/ui` renders every shared component and its states.                                                                        |
 
 The failure parameters are read when the page loads.
 
@@ -93,16 +93,16 @@ Opstream's design system (`--brand-main`, `--mono-dark1`) and semantic tokens th
 
 Each decision has a short record in [`docs/adr`](docs/adr/README.md): context, what was chosen, what was rejected and why.
 
-| Topic | Decision | ADR |
-|---|---|---|
-| Stack | Angular 22 standalone, zoneless; signals for view state, RxJS for async flows | [0002](docs/adr/0002-angular-standalone-signals-rxjs.md) |
-| Structure | Feature folders; `shared/ui` has no domain knowledge | [0003](docs/adr/0003-feature-based-folder-structure.md) |
-| Mock API | `HttpInterceptor`, so services use the real `HttpClient` and contract URLs | [0004](docs/adr/0004-mock-backend-http-interceptor.md) |
-| Form model | One `FormGroup` per request, one nested group per section | [0005](docs/adr/0005-single-request-form-group.md) |
-| Rendering | `@switch` on field type; radio and toggle are `ControlValueAccessor`s | [0006](docs/adr/0006-dynamic-field-rendering.md) |
-| Routing | One URL per section, guarded so invalid sections cannot be skipped | [0007](docs/adr/0007-routing-and-navigation-guard.md) |
-| Validation | Rules from schema + field type only, never from labels | [0013](docs/adr/0013-validation-rules-by-field-type.md) |
-| Autosave | Per-question lanes, `switchMap`, retry, flush before submit | [0014](docs/adr/0014-autosave-pipeline.md) |
+| Topic      | Decision                                                                      | ADR                                                      |
+| ---------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Stack      | Angular 22 standalone, zoneless; signals for view state, RxJS for async flows | [0002](docs/adr/0002-angular-standalone-signals-rxjs.md) |
+| Structure  | Feature folders; `shared/ui` has no domain knowledge                          | [0003](docs/adr/0003-feature-based-folder-structure.md)  |
+| Mock API   | `HttpInterceptor`, so services use the real `HttpClient` and contract URLs    | [0004](docs/adr/0004-mock-backend-http-interceptor.md)   |
+| Form model | One `FormGroup` per request, one nested group per section                     | [0005](docs/adr/0005-single-request-form-group.md)       |
+| Rendering  | `@switch` on field type; radio and toggle are `ControlValueAccessor`s         | [0006](docs/adr/0006-dynamic-field-rendering.md)         |
+| Routing    | One URL per section, guarded so invalid sections cannot be skipped            | [0007](docs/adr/0007-routing-and-navigation-guard.md)    |
+| Validation | Rules from schema + field type only, never from labels                        | [0013](docs/adr/0013-validation-rules-by-field-type.md)  |
+| Autosave   | Per-question lanes, `switchMap`, retry, flush before submit                   | [0014](docs/adr/0014-autosave-pipeline.md)               |
 
 ## Assumptions and contract extensions
 

@@ -1,4 +1,9 @@
-import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { RawRequestSchema, RequestDraft, SaveAnswerResponse } from '../models';
@@ -24,7 +29,10 @@ function setup(overrides: Partial<MockBackendConfig> = {}) {
       { provide: MOCK_BACKEND_CONFIG, useValue: config },
       {
         provide: MOCK_STORAGE,
-        useValue: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => store.set(k, v) },
+        useValue: {
+          getItem: (k: string) => store.get(k) ?? null,
+          setItem: (k: string, v: string) => store.set(k, v),
+        },
       },
     ],
   });
@@ -55,7 +63,11 @@ describe('mockBackendInterceptor', () => {
     expect(saved).toMatchObject({ questionId: ITEM_NAME, value: 'Laptop' });
 
     const draft = await firstValueFrom(http.get<RequestDraft>('/api/requests/r1'));
-    expect(draft).toMatchObject({ id: 'r1', schemaId: 'software-request', answers: { [ITEM_NAME]: 'Laptop' } });
+    expect(draft).toMatchObject({
+      id: 'r1',
+      schemaId: 'software-request',
+      answers: { [ITEM_NAME]: 'Laptop' },
+    });
   });
 
   it('GET of an unknown request is a 404', async () => {
@@ -68,15 +80,29 @@ describe('mockBackendInterceptor', () => {
     const put = (url: string, body: unknown) => statusOf(firstValueFrom(http.put(url, body)));
 
     expect(await put(`/api/requests/r1/question/${ITEM_NAME}`, { value: 'x' })).toBe(400);
-    expect(await put(`/api/requests/r1/question/${ITEM_NAME}`, { schemaId: 'nope', value: 'x' })).toBe(404);
-    expect(await put('/api/requests/r1/question/999', { schemaId: 'software-request', value: 'x' })).toBe(400);
+    expect(
+      await put(`/api/requests/r1/question/${ITEM_NAME}`, { schemaId: 'nope', value: 'x' }),
+    ).toBe(404);
+    expect(
+      await put('/api/requests/r1/question/999', { schemaId: 'software-request', value: 'x' }),
+    ).toBe(400);
   });
 
   it('refuses to move a request to another schema', async () => {
     const http = setup();
-    await firstValueFrom(http.put(`/api/requests/r1/question/${ITEM_NAME}`, { schemaId: 'software-request', value: 'a' }));
+    await firstValueFrom(
+      http.put(`/api/requests/r1/question/${ITEM_NAME}`, {
+        schemaId: 'software-request',
+        value: 'a',
+      }),
+    );
     const status = await statusOf(
-      firstValueFrom(http.put('/api/requests/r1/question/75329829348985', { schemaId: 'hardware-request', value: 'b' })),
+      firstValueFrom(
+        http.put('/api/requests/r1/question/75329829348985', {
+          schemaId: 'hardware-request',
+          value: 'b',
+        }),
+      ),
     );
     expect(status).toBe(409);
   });
@@ -84,7 +110,12 @@ describe('mockBackendInterceptor', () => {
   it('fails with 500 according to the failure rate, without writing', async () => {
     const http = setup({ saveAnswer: { latencyMs: [0, 0], failureRate: 1 } });
     const status = await statusOf(
-      firstValueFrom(http.put(`/api/requests/r1/question/${ITEM_NAME}`, { schemaId: 'software-request', value: 'x' })),
+      firstValueFrom(
+        http.put(`/api/requests/r1/question/${ITEM_NAME}`, {
+          schemaId: 'software-request',
+          value: 'x',
+        }),
+      ),
     );
     expect(status).toBe(500);
     expect(await statusOf(firstValueFrom(http.get('/api/requests/r1')))).toBe(404);
@@ -93,7 +124,10 @@ describe('mockBackendInterceptor', () => {
   it('waits for the configured latency', async () => {
     vi.useFakeTimers();
     try {
-      const http = setup({ saveAnswer: { latencyMs: [600, 1000], failureRate: 0 }, random: () => 0.5 });
+      const http = setup({
+        saveAnswer: { latencyMs: [600, 1000], failureRate: 0 },
+        random: () => 0.5,
+      });
       let done = false;
       http
         .put(`/api/requests/r1/question/${ITEM_NAME}`, { schemaId: 'software-request', value: 'x' })

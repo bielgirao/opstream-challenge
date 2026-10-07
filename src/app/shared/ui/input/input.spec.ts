@@ -15,7 +15,11 @@ class Host {
 function setup() {
   const fixture = TestBed.createComponent(Host);
   fixture.detectChanges();
-  return { fixture, host: fixture.componentInstance, input: fixture.nativeElement.querySelector('input') as HTMLInputElement };
+  return {
+    fixture,
+    host: fixture.componentInstance,
+    input: fixture.nativeElement.querySelector('input') as HTMLInputElement,
+  };
 }
 
 describe('UiInput', () => {

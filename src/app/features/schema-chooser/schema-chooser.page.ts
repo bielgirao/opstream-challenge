@@ -5,7 +5,15 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SchemaApiService } from '../../core/api';
 import { RequestSession } from '../../core/request';
 import { toLoadState } from '../../core/utils/load-state';
-import { IconName, UiButton, UiCard, UiChip, UiIcon, UiNotification, UiSkeleton } from '../../shared/ui';
+import {
+  IconName,
+  UiButton,
+  UiCard,
+  UiChip,
+  UiIcon,
+  UiNotification,
+  UiSkeleton,
+} from '../../shared/ui';
 
 /** Presentation only: unknown schemas fall back to a generic icon. */
 const SCHEMA_ICONS: Readonly<Record<string, IconName>> = {
