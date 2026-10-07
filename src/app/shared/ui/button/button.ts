@@ -16,6 +16,7 @@ export type ButtonSize = 32 | 40;
  * handlers too (e.g. an `isSubmitting` flag) instead of relying on the button alone.
  */
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector -- applied to a native element to keep its semantics
   selector: 'button[uiButton]',
   imports: [UiLoader],
   templateUrl: './button.html',

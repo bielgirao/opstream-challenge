@@ -12,6 +12,7 @@ export type NavItemStatus = 'none' | 'saving' | 'done' | 'error';
  * tab order and ignore pointer events. Navigation must still be guarded by the router.
  */
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector -- applied to a native element to keep its semantics
   selector: 'a[uiNavItem], button[uiNavItem]',
   imports: [UiIcon, UiLoader],
   templateUrl: './nav-item.html',

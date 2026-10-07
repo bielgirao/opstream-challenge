@@ -7,6 +7,7 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@an
  * Usage: <button uiChip type="button" [selected]="isSelected"><ui-icon name="apps" /> Software</button>
  */
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector -- applied to a native element to keep its semantics
   selector: 'button[uiChip]',
   template: '<ng-content />',
   styleUrl: './chip.scss',

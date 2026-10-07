@@ -1,0 +1,9 @@
+dist
+coverage
+node_modules
+package-lock.json
+# Under docs/, only the decision records are formatted
+docs/*
+!docs/adr/
+playwright-report
+test-results

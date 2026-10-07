@@ -7,6 +7,7 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@an
  * Usage: <input uiInput id="name" formControlName="name" [invalid]="isInvalid" />
  */
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector -- applied to a native element to keep its semantics
   selector: 'input[uiInput]',
   template: '',
   styleUrl: './input.scss',
