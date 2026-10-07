@@ -108,6 +108,11 @@ function simulate(
   handler: () => Outcome,
 ): Observable<HttpEvent<unknown>> {
   return defer(() => {
+    // A real browser fails fast without a connection; mimic it so offline handling is testable.
+    if (!config.isOnline()) {
+      return timer(0).pipe(mergeMap(() => throwError(() => error(req, 0, 'Network unavailable'))));
+    }
+
     const [min, max] = profile.latencyMs;
     const latency = min + config.random() * (max - min);
     const fails = config.random() < profile.failureRate;

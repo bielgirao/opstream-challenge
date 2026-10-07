@@ -20,6 +20,7 @@ function setup(overrides: Partial<MockBackendConfig> = {}) {
     getDraft: instant,
     saveAnswer: instant,
     random: () => 0.5,
+    isOnline: () => true,
     ...overrides,
   };
   const store = new Map<string, string>();
@@ -119,6 +120,11 @@ describe('mockBackendInterceptor', () => {
     );
     expect(status).toBe(500);
     expect(await statusOf(firstValueFrom(http.get('/api/requests/r1')))).toBe(404);
+  });
+
+  it('fails like a network error (status 0) while offline', async () => {
+    const http = setup({ isOnline: () => false });
+    expect(await statusOf(firstValueFrom(http.get('/api/schemas')))).toBe(0);
   });
 
   it('waits for the configured latency', async () => {

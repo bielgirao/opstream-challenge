@@ -13,6 +13,8 @@ export interface MockBackendConfig {
   saveAnswer: EndpointProfile;
   /** Source of randomness; replaced with a deterministic function in tests. */
   random: () => number;
+  /** Whether the browser is online; offline requests fail like a real network error (status 0). */
+  isOnline: () => boolean;
 }
 
 export const DEFAULT_MOCK_BACKEND_CONFIG: MockBackendConfig = {
@@ -21,6 +23,7 @@ export const DEFAULT_MOCK_BACKEND_CONFIG: MockBackendConfig = {
   // Brief: 600–1000ms latency and 10–20% random failures on PUT.
   saveAnswer: { latencyMs: [600, 1000], failureRate: 0.15 },
   random: Math.random,
+  isOnline: () => globalThis.navigator?.onLine ?? true,
 };
 
 /**
