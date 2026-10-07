@@ -21,17 +21,18 @@ No backend is needed: an HTTP interceptor answers `/api/*` in the browser.
 
 ## Try it
 
-| What                | How                                                                                                                         |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| The happy path      | Open `/`, pick a type, fill both sections, submit.                                                                          |
-| Validation          | Click **Next** with empty fields: errors appear and focus jumps to the first invalid field.                                 |
-| Numbers             | Type letters, `-`, `e` or `.` into **Quantity**: they never reach the field (quantities are whole).                         |
-| Autosave            | Type and pause: `Saving…` → `Saved`. The sidebar shows saving / done / error per section.                                   |
-| Refresh             | Reload in the middle of the form: answers come back from the (mock) server.                                                 |
-| Guarded URLs        | Paste the URL of section 2 while section 1 is invalid: you are sent back to section 1.                                      |
-| Save failures       | Add `?mockSaveFailureRate=1` to the URL: `Error – retrying…`, two retries, then `Couldn't save · Retry`; Submit is blocked. |
-| Loading failures    | Add `?mockFailureRate=1`: the chooser shows an error with **Try again**. `?mockFailureRate=0` turns random failures off.    |
-| Component catalogue | `/ui` renders every shared component and its states.                                                                        |
+| What                | How                                                                                                                                                                               |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The happy path      | Open `/`, pick a type, fill both sections, submit.                                                                                                                                |
+| Validation          | Click **Next** with empty fields: errors appear and focus jumps to the first invalid field.                                                                                       |
+| Numbers             | Type letters, `-`, `e` or `.` into **Quantity**: they never reach the field (quantities are whole).                                                                               |
+| Autosave            | Type and pause: `Saving…` → `Saved`. The sidebar shows saving / done / error per section.                                                                                         |
+| Refresh             | Reload in the middle of the form: answers come back from the (mock) server.                                                                                                       |
+| Guarded URLs        | Paste the URL of section 2 while section 1 is invalid: you are sent back to section 1.                                                                                            |
+| Save failures       | Add `?mockSaveFailureRate=1` to the URL: `Error – retrying…`, two retries, then `Couldn't save · Retry`; Submit is blocked.                                                       |
+| Offline             | In DevTools, set the network to **Offline** and keep typing: the indicator says `Offline – will save when you reconnect`. Go back online: unsaved answers are sent automatically. |
+| Loading failures    | Add `?mockFailureRate=1`: the chooser shows an error with **Try again**. `?mockFailureRate=0` turns random failures off.                                                          |
+| Component catalogue | `/ui` renders every shared component and its states.                                                                                                                              |
 
 The failure parameters are read when the page loads.
 

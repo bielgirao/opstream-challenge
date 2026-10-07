@@ -31,6 +31,18 @@ each FormControl.valueChanges → { questionId, value }
 | Lifecycle                 | Owned by the root `RequestSession`, one pipeline per active request; stopped on submit and on "Create New Request" | A save in flight finishes even if the user leaves the wizard.                                           |
 | Closing the tab           | `beforeunload` warning while saves are pending                                                                     | Cheap protection against data loss.                                                                     |
 
+### Offline
+
+Losing the connection is the most common real-world cause of failed saves, so it is handled explicitly:
+
+- `NetworkStatus` exposes `online` (signal) and `reconnected$` from the browser's `online` / `offline` events;
+- while offline, any answer not yet saved shows the status **"Offline – will save when you reconnect"**
+  instead of a generic error, and the wizard shows a warning;
+- on reconnect, answers whose saves gave up are resent automatically (`retryFailed()`), no user action needed;
+- Submit with unsaved answers while offline is refused at once (`'offline'`) instead of waiting for every
+  retry to run out;
+- the mock backend fails offline requests with status 0, like a real network error.
+
 Aggregate status priority: `error` → "Couldn't save · Retry" › `retrying` → "Error – retrying…" › `pending`/`saving` → "Saving…" › all `saved` → "Saved" › nothing yet → hidden.
 
 ## Options considered
