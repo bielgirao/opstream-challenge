@@ -17,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, combineLatest, of, scan, startWith, switchMap } from 'rxjs';
 import { QuestionSaveState, SchemaSection } from '../../core/models';
+import { NetworkStatus } from '../../core/network';
 import {
   furthestReachableIndex,
   OpenResult,
@@ -65,6 +66,7 @@ export class RequestWizardPage {
   readonly sectionId = input<string>();
 
   protected readonly session = inject(RequestSession);
+  protected readonly network = inject(NetworkStatus);
   private readonly router = inject(Router);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);
@@ -122,7 +124,8 @@ export class RequestWizardPage {
   });
 
   protected readonly submitting = signal(false);
-  private readonly submitFailed = signal(false);
+  /** Set when a submit was blocked (failed saves or offline); cleared on the next attempt. */
+  protected readonly submitFailed = signal(false);
   /** Shown after a submit blocked by failed saves, until they are saved. */
   protected readonly showSaveFailure = computed(
     () => this.submitFailed() && this.session.saveStatus() === 'error',
@@ -198,6 +201,7 @@ export class RequestWizardPage {
             void this.router.navigate(['/requests', request.id, 'summary'], { replaceUrl: true });
             break;
           case 'save-failed':
+          case 'offline':
             this.submitFailed.set(true);
             break;
           case 'invalid': {

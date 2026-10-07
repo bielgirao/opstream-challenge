@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { of, throwError } from 'rxjs';
 import { RequestDraft } from '../../core/models';
 import { RequestSession } from '../../core/request';
 import {
@@ -128,6 +129,34 @@ describe('RequestWizardPage', () => {
 
     expect(ctx.el().textContent).toContain("Some answers weren't saved");
     expect(ctx.router.url).toBe(`/requests/${id}/sections/vendor-info`);
+  });
+
+  it('warns when offline and explains why submit is blocked', async () => {
+    const offline = () => throwError(() => new HttpErrorResponse({ status: 0 }));
+    const ctx = await setup({
+      saveAnswer: () =>
+        navigator.onLine ? of({ questionId: '', value: null, savedAt: '' }) : offline(),
+    });
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    window.dispatchEvent(new Event('offline'));
+
+    const { id, form } = ctx.session.start(SOFTWARE_SCHEMA);
+    form.patchValue({
+      'requested-item': { [SOFTWARE.itemName]: 'Figma', [SOFTWARE.quantity]: 3 },
+      'vendor-info': { [SOFTWARE.vendorName]: 'Figma Inc.', [SOFTWARE.vendorLocation]: 'UK' },
+    });
+    await ctx.harness.navigateByUrl(`/requests/${id}/sections/vendor-info`, RequestWizardPage);
+    await ctx.stable();
+    expect(ctx.el().textContent).toContain("You're offline");
+    expect(ctx.el().querySelector('ui-save-indicator')?.textContent).toContain('Offline');
+
+    clickButton(ctx.el(), 'Submit');
+    await ctx.stable();
+    expect(ctx.el().textContent).toContain('Reconnect to submit');
+    expect(ctx.router.url).toBe(`/requests/${id}/sections/vendor-info`);
+
+    vi.restoreAllMocks();
+    window.dispatchEvent(new Event('online'));
   });
 
   it('redirects to the first section when a later one is not reachable yet', async () => {

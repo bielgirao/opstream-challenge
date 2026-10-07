@@ -60,6 +60,17 @@
             <ui-save-indicator [status]="session.saveStatus()" (retry)="retrySaves()" />
           </header>
 
+          @if (!network.online()) {
+            <ui-notification type="warning" title="You're offline">
+              @if (submitFailed()) {
+                Reconnect to submit: your answers will be saved first.
+              } @else {
+                You can keep filling in the form. Your answers will be saved when the connection is
+                back.
+              }
+            </ui-notification>
+          }
+
           @if (showSaveFailure()) {
             <ui-notification type="error" title="Some answers weren't saved">
               Your request can't be submitted until every answer is saved.
