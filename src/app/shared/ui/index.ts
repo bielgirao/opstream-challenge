@@ -12,3 +12,4 @@ export * from './radio-group/radio-group';
 export * from './save-indicator/save-indicator';
 export * from './skeleton/skeleton';
 export * from './toggle-switch/toggle-switch';
+export * from './trim-on-blur/trim-on-blur';
