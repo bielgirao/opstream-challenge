@@ -9,7 +9,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "e2e": "playwright test",
+    "screenshots": "SCREENSHOTS=1 playwright test"
   },
   "private": true,
   "packageManager": "npm@11.19.0",
@@ -28,6 +30,7 @@
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
     "angular-eslint": "22.5.0",
     "eslint": "^10.9.1",
     "jsdom": "^30.0.0",
