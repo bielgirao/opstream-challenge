@@ -11,6 +11,10 @@
     <ui-icon name="check-circle" />
     <span>Saved</span>
   }
+  @case ('offline') {
+    <ui-icon name="alert-circle" />
+    <span>Offline – will save when you reconnect</span>
+  }
   @case ('error') {
     <ui-icon name="alert-circle" />
     <span>Couldn't save.</span>

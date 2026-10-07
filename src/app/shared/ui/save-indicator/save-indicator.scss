@@ -11,7 +11,8 @@
   color: var(--color-text-muted);
 }
 
-:host([data-status='retrying']) {
+:host([data-status='retrying']),
+:host([data-status='offline']) {
   color: var(--color-warning);
 }
 

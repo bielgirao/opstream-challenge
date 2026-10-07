@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { computed, DOCUMENT, inject, Injectable, InjectionToken, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
   catchError,
@@ -18,7 +18,8 @@ import {
   throwError,
 } from 'rxjs';
 import { RequestApiService, SchemaApiService } from '../api';
-import { QuestionSaveState, RequestSchema } from '../models';
+import { AggregateSaveStatus, QuestionSaveState, RequestSchema } from '../models';
+import { NetworkStatus } from '../network';
 import {
   aggregateSaveStatus,
   AnswerChange,
@@ -49,7 +50,7 @@ export interface ActiveRequest {
 
 export type OpenResult = 'ready' | 'not-found';
 export type FlushResult = 'saved' | 'error';
-export type SubmitResult = 'submitted' | 'invalid' | 'save-failed';
+export type SubmitResult = 'submitted' | 'invalid' | 'save-failed' | 'offline';
 
 type QuestionStates = Readonly<Record<string, QuestionSaveState>>;
 
@@ -67,6 +68,7 @@ export class RequestSession {
   private readonly registry = inject(RequestRegistry);
   private readonly options = inject(AUTOSAVE_OPTIONS);
   private readonly window = inject(DOCUMENT).defaultView;
+  private readonly network = inject(NetworkStatus);
 
   private readonly states$ = new BehaviorSubject<QuestionStates>({});
   private readonly flush$ = new Subject<void>();
@@ -78,7 +80,18 @@ export class RequestSession {
   readonly active = this.activeRequest.asReadonly();
   /** Save state per field id. */
   readonly questionStates = toSignal(this.states$, { requireSync: true });
-  readonly saveStatus = computed(() => aggregateSaveStatus(this.questionStates()));
+  /** Aggregate status; 'offline' while answers wait for the connection to come back. */
+  readonly saveStatus = computed((): AggregateSaveStatus => {
+    const status = aggregateSaveStatus(this.questionStates());
+    return !this.network.online() && status !== 'saved' && status !== 'idle' ? 'offline' : status;
+  });
+
+  constructor() {
+    // Back online: answers whose saves gave up while offline are sent again, without user action.
+    this.network.reconnected$.pipe(takeUntilDestroyed()).subscribe(() => {
+      if (this.activeRequest() && this.connection) this.retryFailed();
+    });
+  }
 
   /** Starts a new request for a schema. No HTTP call: the first saved answer creates it. */
   start(schema: RequestSchema): ActiveRequest {
@@ -137,6 +150,8 @@ export class RequestSession {
   submit(): Observable<SubmitResult> {
     const request = this.activeRequest();
     if (!request || request.form.invalid) return of<SubmitResult>('invalid');
+    // Offline with unsaved answers: fail fast instead of waiting for every retry to run out.
+    if (!this.network.online() && this.hasUnsavedAnswers()) return of<SubmitResult>('offline');
 
     return this.flush().pipe(
       map((result): SubmitResult => {
@@ -146,6 +161,10 @@ export class RequestSession {
         return 'submitted';
       }),
     );
+  }
+
+  hasUnsavedAnswers(): boolean {
+    return Object.values(this.states$.value).some((state) => state !== 'saved');
   }
 
   /** Saves again every answer whose save gave up. */
@@ -192,7 +211,7 @@ export class RequestSession {
     if (this.window) {
       this.connection.add(
         fromEvent<BeforeUnloadEvent>(this.window, 'beforeunload').subscribe((event) => {
-          if (Object.values(this.states$.value).some((state) => state !== 'saved')) {
+          if (this.hasUnsavedAnswers()) {
             event.preventDefault();
             event.returnValue = '';
           }

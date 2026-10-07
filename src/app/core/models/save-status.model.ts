@@ -2,4 +2,4 @@
 export type QuestionSaveState = 'pending' | 'saving' | 'retrying' | 'saved' | 'error';
 
 /** What the save indicator shows for the whole request. */
-export type AggregateSaveStatus = 'idle' | 'saving' | 'retrying' | 'saved' | 'error';
+export type AggregateSaveStatus = 'idle' | 'saving' | 'retrying' | 'saved' | 'error' | 'offline';

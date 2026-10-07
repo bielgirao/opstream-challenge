@@ -14,6 +14,7 @@ describe('UiSaveIndicator', () => {
     ['retrying', 'Error – retrying…'],
     ['saved', 'Saved'],
     ['error', "Couldn't save."],
+    ['offline', 'Offline – will save when you reconnect'],
   ] as const)('shows the brief\'s label for "%s"', async (status, text) => {
     const { el } = await render(status);
     expect(el.textContent).toContain(text);

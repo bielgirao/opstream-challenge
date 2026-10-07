@@ -162,6 +162,53 @@ describe('RequestSession', () => {
     expect(session.saveStatus()).toBe('saved');
   });
 
+  describe('offline', () => {
+    const goOffline = () => {
+      vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+      window.dispatchEvent(new Event('offline'));
+    };
+    const goOnline = () => {
+      vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(true);
+      window.dispatchEvent(new Event('online'));
+    };
+    afterEach(() => vi.restoreAllMocks());
+
+    it('reports "offline" while answers wait for the connection', async () => {
+      const { session } = setup();
+      session.start(software);
+      goOffline();
+      control(session, ITEM).setValue('Figma');
+      expect(session.saveStatus()).toBe('offline');
+    });
+
+    it('resends failed answers as soon as the connection comes back', async () => {
+      const { session, http } = setup();
+      const { id } = session.start(software);
+      control(session, ITEM).setValue('Figma');
+      await vi.advanceTimersByTimeAsync(800);
+      goOffline();
+      http
+        .expectOne(`/api/requests/${id}/question/${ITEM}`)
+        .error(new ProgressEvent('error'), { status: 0 });
+      expect(session.saveStatus()).toBe('offline');
+
+      goOnline();
+      http.expectOne(`/api/requests/${id}/question/${ITEM}`).flush({});
+      expect(session.saveStatus()).toBe('saved');
+    });
+
+    it('does not submit unsaved answers while offline', async () => {
+      const { session } = setup();
+      const { form } = session.start(software);
+      goOffline();
+      form.patchValue({
+        'requested-item': { [ITEM]: 'Figma', [QTY]: 2 },
+        'vendor-info': { '4957463729': 'Figma Inc.', '8462736152': 'USA' },
+      });
+      expect(await firstValueFrom(session.submit())).toBe('offline');
+    });
+  });
+
   it('reset forgets the active request and stops autosaving', async () => {
     const { session, http } = setup();
     session.start(software);
